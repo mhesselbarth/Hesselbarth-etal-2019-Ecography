@@ -1,21 +1,14 @@
-library(NLMR)
-library(raster)
-library(rgeos)
-library(sp)
-library(tidyverse)
-library(landscapemetrics)
-
 # Function to sample circles
 
-sample_circles <- function(landscape, size, type, n){
+sample_squares <- function(landscape, size, type, n){
   if(type == "random"){
     
     sample_plots <- landscape %>%
       raster::extent() %>%
       as('SpatialPolygons') %>%
       sp::spsample(n = n, type = type) %>%
-      rgeos::gBuffer(width = size, byid = TRUE) # size needs to be converted to area
-    }
+      rgeos::gBuffer(width = size, byid = TRUE, quadsegs = 1, capStyle="SQUARE") # size needs to be converted to area
+  }
   
   else if(type == "regular"){
     
@@ -23,7 +16,7 @@ sample_circles <- function(landscape, size, type, n){
       raster::extent() %>%
       as('SpatialPolygons') %>%
       sp::spsample(n = n, type = type) %>%
-      rgeos::gBuffer(width = size, byid = TRUE) # size needs to be converted to area
+      rgeos::gBuffer(width = size, byid = TRUE, quadsegs = 1, capStyle="SQUARE") # size needs to be converted to area
   }
   
   else{warning("Please select type == 'random' or type == 'regular", call. = FALSE)}

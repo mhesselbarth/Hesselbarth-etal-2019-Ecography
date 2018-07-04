@@ -1,0 +1,16 @@
+check.packages <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg)) 
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE)
+}
+
+
+packages<-c("NLMR",
+            "raster",
+            "rgeos",
+            "sp",
+            "tidyverse",
+            "landscapemetrics")
+
+check.packages(packages)

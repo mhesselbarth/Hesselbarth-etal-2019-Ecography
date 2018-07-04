@@ -23,7 +23,7 @@ sample_rectangle <- function(landscape, size, type, n){
       sp::spsample(n = n, type = type)
   }
   
-  else{warning("Please select type == 'random' or type == 'regular", call. = FALSE)}
+  else{stop("Please select type == 'random' or type == 'regular", call. = FALSE)}
   
   result <- sample_points %>%
     seq_along() %>% 
@@ -53,7 +53,7 @@ sample_rectangle <- function(landscape, size, type, n){
       
       landscape_crop <- raster::crop(x = landscape, y = sample_plot)
       landscape_mask <- raster::mask(x = landscape_crop, mask = sample_plot)
-      value <- lsm_l_ta(landscape_mask) # needs to be lsm_calculate()
+      value <- lsm_l_lpi(landscape_mask) # needs to be lsm_calculate()
       
     }, .id = "plot")
   

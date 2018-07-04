@@ -21,6 +21,6 @@ landscape_low_autocorrelation <- function(seed) {
   nlm_fbm(500,
           500,
           fract_dim =  0.2,
-          user_seed = 15) %>%
+          user_seed = seed) %>%
     util_classify(weighting = c(0.2, 0.2, 0.2, 0.2, 0.2))
 }

@@ -1,13 +1,16 @@
 # Function to sample circles
 
 sample_circles <- function(landscape, size, type, n){
+  
+  width = sqrt(size / pi)
+  
   if(type == "random"){
     
     sample_plots <- landscape %>%
       raster::extent() %>%
       as('SpatialPolygons') %>%
       sp::spsample(n = n, type = type) %>%
-      rgeos::gBuffer(width = size, byid = TRUE) # size needs to be converted to area
+      rgeos::gBuffer(width = width, byid = TRUE) # size needs to be converted to area
     }
   
   else if(type == "regular"){
@@ -16,7 +19,7 @@ sample_circles <- function(landscape, size, type, n){
       raster::extent() %>%
       as('SpatialPolygons') %>%
       sp::spsample(n = n, type = type) %>%
-      rgeos::gBuffer(width = size, byid = TRUE) # size needs to be converted to area
+      rgeos::gBuffer(width = width, byid = TRUE) # size needs to be converted to area
   }
   
   else{warning("Please select type == 'random' or type == 'regular", call. = FALSE)}

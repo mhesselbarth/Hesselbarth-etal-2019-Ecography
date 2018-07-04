@@ -11,6 +11,7 @@ packages<-c("NLMR",
             "rgeos",
             "sp",
             "tidyverse",
-            "landscapemetrics")
+            "landscapemetrics", 
+            "maptools")
 
 check.packages(packages)

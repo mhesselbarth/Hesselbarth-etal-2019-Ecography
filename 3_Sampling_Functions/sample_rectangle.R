@@ -1,10 +1,15 @@
 # Function to sample rectangle
 
 sample_rectangle <- function(landscape, size, type, n){
+  
+  short_edge <- 0.5 * sqrt(size)
+  long_edge <- 2 * sqrt(size)
+  
   if(type == "random"){
     
     sample_points <- landscape %>%
       raster::extent() %>%
+      magrittr::subtract(., long_edge * 2) %>%
       as('SpatialPolygons') %>%
       sp::spsample(n = n, type = type)
   }
@@ -13,14 +18,12 @@ sample_rectangle <- function(landscape, size, type, n){
     
     sample_points <- landscape %>%
       raster::extent() %>%
+      magrittr::subtract(., long_edge * 2) %>%
       as('SpatialPolygons') %>%
       sp::spsample(n = n, type = type)
   }
   
   else{warning("Please select type == 'random' or type == 'regular", call. = FALSE)}
-  
-  short_edge <- 0.5 * sqrt(size)
-  long_edge <- 2 * sqrt(size)
   
   result <- sample_points %>%
     seq_along() %>% 

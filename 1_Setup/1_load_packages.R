@@ -5,8 +5,7 @@ check.packages <- function(pkg){
   sapply(pkg, require, character.only = TRUE)
 }
 
-packages<-c("furrr", "
-            future",
+packages<-c("furrr", 
             "landscapemetrics",
             "landscapetools",
             "magrittr", 

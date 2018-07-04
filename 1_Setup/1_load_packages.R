@@ -5,13 +5,13 @@ check.packages <- function(pkg){
   sapply(pkg, require, character.only = TRUE)
 }
 
-
 packages<-c("NLMR",
             "raster",
             "rgeos",
             "sp",
             "tidyverse",
             "landscapemetrics",
-            "landscapetools")
+            "landscapetools"),
+            "maptools")
 
 check.packages(packages)

@@ -1,12 +1,26 @@
-# Simulate landscapes and classify into 5 land cover types
-landscape_low_autocorrelation <-
-  nlm_mpd(1000, 1000, roughness = 0.2) %>%
-  util_classify(weighting = c(0.1, 0.15, 0.4, 0.05, 0.3))
+# functions to simulate landscapes with low to high spatial
+# autocorrelation
 
-landscape_medium_autocorrelation <-
-  nlm_mpd(1000, 1000, roughness = 0.6) %>%
-  util_classify(weighting = c(0.1, 0.15, 0.4, 0.05, 0.3))
+landscape_high_autocorrelation <- function(seed) {
+  nlm_fbm(500,
+          500,
+          fract_dim =  1.5,
+          user_seed = seed) %>%
+    util_classify(weighting = c(0.2, 0.2, 0.2, 0.2, 0.2))
+}
 
-landscape_high_autocorrelation <-
-  nlm_mpd(1000, 1000, roughness = 0.8) %>%
-  util_classify(weighting = c(0.1, 0.15, 0.4, 0.05, 0.3))
+landscape_medium_autocorrelation <- function(seed) {
+  nlm_fbm(500,
+          500,
+          fract_dim =  1.0,
+          user_seed = seed) %>%
+    util_classify(weighting = c(0.2, 0.2, 0.2, 0.2, 0.2))
+}
+
+landscape_low_autocorrelation <- function(seed) {
+  nlm_fbm(500,
+          500,
+          fract_dim =  0.2,
+          user_seed = 15) %>%
+    util_classify(weighting = c(0.2, 0.2, 0.2, 0.2, 0.2))
+}

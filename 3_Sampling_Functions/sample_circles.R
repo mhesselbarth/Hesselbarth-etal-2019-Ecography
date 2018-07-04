@@ -8,6 +8,7 @@ sample_circles <- function(landscape, size, type, n){
     
     sample_plots <- landscape %>%
       raster::extent() %>%
+      magrittr::subtract(., width*2) %>% 
       as('SpatialPolygons') %>%
       sp::spsample(n = n, type = type) %>%
       rgeos::gBuffer(width = width, byid = TRUE) # size needs to be converted to area
@@ -17,6 +18,7 @@ sample_circles <- function(landscape, size, type, n){
     
     sample_plots <- landscape %>%
       raster::extent() %>%
+      magrittr::subtract(., width*2) %>% 
       as('SpatialPolygons') %>%
       sp::spsample(n = n, type = type) %>%
       rgeos::gBuffer(width = width, byid = TRUE) # size needs to be converted to area

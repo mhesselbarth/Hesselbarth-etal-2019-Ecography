@@ -18,7 +18,7 @@ seed <- seq(5,50, 5)
 # 2. 
 
 library(furrr)
-future_map(seed, function(seed) {
+test <- future_map(seed, function(seed) {
   ls_low_autocor <- landscape_low_autocorrelation(15)
   future_map(seq_len(nrow(sim_design)), function(row_simdesign) {
     sample_circles(ls_low_autocor,

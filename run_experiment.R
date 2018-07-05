@@ -1,6 +1,6 @@
 set.seed(42)
 
-# source simulation function
+#### 1. source simulation function ####
 
 purrr::walk(list.files(path = "1_Setup", pattern = ".R", full.names = TRUE), 
             function(x) source(x))
@@ -11,7 +11,7 @@ purrr::walk(list.files(path = "2_Simulate_NLM", pattern = ".R", full.names = TRU
 purrr::walk(list.files(path = "3_Sampling_Functions", pattern = ".R", full.names = TRUE), 
             function(x) source(x))
 
-# 1. Create simulation design
+#### 2. Create simulation design ####
 
 size <- c(100, 1250, 7500)
 n <- c(10, 25, 50)
@@ -26,7 +26,7 @@ simulation_design <- expand.grid(size = size,
 
 simulation_run <- seq(5, 10, 5) #seq(5,50, 5)
 
-# 2. Run simulations 
+#### 3. Run simulations ####
 
 future::plan(list(future::sequential, future::multiprocess))
 
@@ -76,7 +76,7 @@ results_high_ac <- simulation_run %>%
                 simulation_run = as.integer(simulation_run))
 
 
-# 3. Save Results
+#### 4. Save Results ####
 UtilityFunctions::Save.Function.rds(object = results_low_ac, 
                                     filename = "results_low_ac.rds", 
                                     path = paste0(getwd(), "/4_Results"), 

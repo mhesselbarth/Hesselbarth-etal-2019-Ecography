@@ -1,0 +1,53 @@
+# Function to sample circles
+
+sample_squares <-
+  function(landscape, size, type, n, metrics = TRUE) {
+    width = sqrt(size) / 2
+    
+    if (type == "random") {
+      sample_plots <- landscape %>%
+        raster::extent() %>%
+        magrittr::subtract(., width * 2) %>%
+        as('SpatialPolygons') %>%
+        sp::spsample(n = n, type = type) %>%
+        rgeos::gBuffer(
+          width = width,
+          byid = TRUE,
+          quadsegs = 1,
+          capStyle = "SQUARE"
+        ) # size needs to be converted to area
+    }
+    
+    else if (type == "regular") {
+      sample_plots <- landscape %>%
+        raster::extent() %>%
+        magrittr::subtract(., width * 2) %>%
+        as('SpatialPolygons') %>%
+        sp::spsample(n = n, type = type) %>%
+        rgeos::gBuffer(
+          width = width,
+          byid = TRUE,
+          quadsegs = 1,
+          capStyle = "SQUARE"
+        ) # size needs to be converted to area
+    }
+    
+    else{
+      stop("Please select type == 'random' or type == 'regular", call. = FALSE)
+    }
+    
+    if (metrics == TRUE) {
+      sample_plots <- sample_plots %>%
+        seq_along() %>%
+        purrr::map_dfr(function(plot_id) {
+          landscape_crop <-
+            raster::crop(x = landscape, y = sample_plots[plot_id, ])
+          landscape_mask <-
+            raster::mask(x = landscape_crop, mask = sample_plots[plot_id, ])
+          value <-
+            calculate_metrics(landscape_mask, c("class", "landscape")) # needs to be c("class", "landscape)
+        }, .id = "plot")
+    }
+    
+    return(sample_plots)
+  }

@@ -24,10 +24,15 @@ landscapes_high_ac <- read_rds(paste0(getwd(),
 
 #### 3. Run sampling ####
 
+options(rasterMaxMemory = 1e10)
+
 # Low AC
-sampling_low_ac <- tibble::tibble()
+sampling_low_ac <- list()
 
 for(current_landscape in 1:nlayers(landscapes_low_ac)) {
+  
+  list_current_design <- list()
+  
   for (current_design in 1:nrow(simulation_design)) {
     
     current_result <- sample_plots(
@@ -38,15 +43,13 @@ for(current_landscape in 1:nlayers(landscapes_low_ac)) {
       n    = simulation_design$n[[current_design]]
     )
     
-    current_result$simulation_run <- current_landscape 
-    current_result$simulation_design <- current_design 
-    
-    sampling_low_ac <- dplyr::bind_rows(sampling_low_ac, current_result)
+    list_current_design <- c(list_current_design, list(current_result))
     
     cat(paste0("\rCurrent landscape: ", current_landscape, " \\ ", 
                  "Current design: ", current_design, " \\ done! "))
-    
   }
+  
+  sampling_low_ac <- c(sampling_low_ac, list(list_current_design))
 }
 
 # Medium AC

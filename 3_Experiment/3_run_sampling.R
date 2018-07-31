@@ -23,8 +23,10 @@ landscapes_high_ac <- read_rds(paste0(getwd(),
 
 #### 3. Run sampling ####
 
+options(rasterMaxMemory = 1e10)
+
 # future::plan(list(future::sequential, future::multiprocess))
-# future::plan(sequential)
+# future::plan(sequential, gc = TRUE)
 
 # Low AC
 sampling_low_ac <-
@@ -38,11 +40,7 @@ sampling_low_ac <-
         n    = simulation_design$n[[current_design]]
       )
     }, .id = "simulation_design")
-  }, .id = "simulation_run") %>%
-  dplyr::mutate(
-    simulation_design = as.integer(simulation_design),
-    simulation_run = as.integer(simulation_run)
-  )
+  }, .id = "simulation_run")
 
 # Medium AC
 sampling_medium_ac <-

@@ -24,6 +24,7 @@ landscapes_high_ac <- read_rds(paste0(getwd(),
 #### 3. Run sampling ####
 
 # future::plan(list(future::sequential, future::multiprocess))
+# future::plan(sequential)
 
 # Low AC
 sampling_low_ac <-
@@ -36,8 +37,7 @@ sampling_low_ac <-
         type = simulation_design$type[[current_design]],
         n    = simulation_design$n[[current_design]]
       )
-    },
-    .id = "simulation_design")
+    }, .id = "simulation_design")
   }, .id = "simulation_run") %>%
   dplyr::mutate(
     simulation_design = as.integer(simulation_design),
@@ -55,8 +55,7 @@ sampling_medium_ac <-
         type = simulation_design$type[[current_design]],
         n    = simulation_design$n[[current_design]]
       )
-    },
-    .id = "simulation_design")
+    }, .id = "simulation_design")
   }, .id = "simulation_run") %>%
   dplyr::mutate(
     simulation_design = as.integer(simulation_design),
@@ -74,8 +73,7 @@ sampling_high_ac <-
         type = simulation_design$type[[current_design]],
         n    = simulation_design$n[[current_design]]
       )
-    },
-    .id = "simulation_design")
+    }, .id = "simulation_design")
   }, .id = "simulation_run") %>%
   dplyr::mutate(
     simulation_design = as.integer(simulation_design),

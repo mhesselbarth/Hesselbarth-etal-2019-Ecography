@@ -1,4 +1,30 @@
 
+#### 1. Source functions #### 
+purrr::walk(list.files(path = "1_Setup", pattern = ".R", full.names = TRUE), 
+            function(x) source(x))
+
+purrr::walk(list.files(path = "2_Functions", pattern = ".R", full.names = TRUE), 
+            function(x) source(x))
+
+#### 2. Import landscapes #### 
+
+# Low AC
+landscapes_low_ac <- read_rds(paste0(getwd(), 
+                                     "/4_Results/landscapes_low_ac.rds"))
+
+# Medium AC
+landscapes_medium_ac <- read_rds(paste0(getwd(), 
+                                        "/4_Results/landscapes_medium_ac.rds"))
+
+# High AC
+landscapes_high_ac <- read_rds(paste0(getwd(), 
+                                      "/4_Results/landscapes_high_ac.rds"))
+
+
+
+#### 3. Run sampling ####
+
+# Low AC
 sampling_low_ac <- tibble::tibble()
 
 for(current_landscape in 1:nlayers(landscapes_low_ac)) {
@@ -23,7 +49,7 @@ for(current_landscape in 1:nlayers(landscapes_low_ac)) {
   }
 }
 
-
+# Medium AC
 sampling_medium_ac <- tibble::tibble()
 
 for(current_landscape in 1:nlayers(landscapes_medium_ac)) {
@@ -48,6 +74,7 @@ for(current_landscape in 1:nlayers(landscapes_medium_ac)) {
   }
 }
 
+# High AC
 sampling_high_ac <- tibble::tibble()
 
 for(current_landscape in 1:nlayers(landscapes_high_ac)) {

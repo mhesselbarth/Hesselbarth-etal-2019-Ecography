@@ -54,11 +54,7 @@ sampling_medium_ac <-
         n    = simulation_design$n[[current_design]]
       )
     }, .id = "simulation_design")
-  }, .id = "simulation_run") %>%
-  dplyr::mutate(
-    simulation_design = as.integer(simulation_design),
-    simulation_run = as.integer(simulation_run)
-  )
+  }, .id = "simulation_run")
 
 # High AC
 sampling_high_ac <-

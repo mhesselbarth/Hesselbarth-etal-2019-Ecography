@@ -59,7 +59,7 @@ sample_rectangle <-
                                                      coords[id, 2]))
     })
     
-    sample_plots <- purrr::map_dfr(seq_along(sample_points), function(plot_id) {
+    sampled_landscape_metrics <- purrr::map_dfr(seq_along(sample_points), function(plot_id) {
       landscape_crop <- raster::crop(x = landscape, y = sample_points[plot_id])
       landscape_mask <- raster::mask(x = landscape_crop, mask = sample_points[plot_id])
       
@@ -68,5 +68,5 @@ sample_rectangle <-
     
     gc()
 
-    return(sample_plots)
+    return(sampled_landscape_metrics)
   }

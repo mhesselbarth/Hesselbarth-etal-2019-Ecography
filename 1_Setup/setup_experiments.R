@@ -37,4 +37,7 @@ simulation_design <- expand.grid(size = size,
                                  type = type) %>%
   tibble::as.tibble()
 
+rm(packages, check.packages,
+   size, n, shape, type)
+
 set.seed(42)

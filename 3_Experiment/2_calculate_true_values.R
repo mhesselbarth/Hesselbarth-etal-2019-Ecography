@@ -23,40 +23,63 @@ landscapes_high_ac <- read_rds(paste0(getwd(),
 
 #### 3. Calculate "real" values ####
 
-future::plan(future::multiprocess)
+# future::plan(future::multiprocess)
 
 # Low AC
-true_value_low_ac <- calculate_metrics(landscapes_low_ac, 
-                                       what = c("class", "landscape"))
+true_value_low_ac_class <- landscapemetrics::calculate_lsm(landscapes_low_ac, 
+                                       what = "class", progress = TRUE)
+true_value_low_ac_landscape <- landscapemetrics::calculate_lsm(landscapes_low_ac, 
+                                             what = "landscape", progress = TRUE)
 
 # Medium AC
-true_value_medium_ac <- calculate_metrics(landscapes_medium_ac, 
-                                       what = c("class", "landscape"))
+true_value_medium_ac_class <- landscapemetrics::calculate_lsm(landscapes_medium_ac, 
+                                             what = "class", progress = TRUE)
+true_value_medium_ac_landscape <- landscapemetrics::calculate_lsm(landscapes_medium_ac, 
+                                                 what = "landscape", progress = TRUE)
 
 # High AC
-true_value_high_ac <- calculate_metrics(landscapes_high_ac, 
-                                       what = c("class", "landscape"))
+true_value_high_ac_class <- landscapemetrics::calculate_lsm(landscapes_high_ac, 
+                                             what = "class", progress = TRUE)
+true_value_high_ac_landscape <- landscapemetrics::calculate_lsm(landscapes_high_ac, 
+                                                 what = "landscape", progress = TRUE)
 
 
 #### 4. Save results ####
 
+overwrite <- FALSE
+
 # Low AC
-UtilityFunctions::Save.Function.rds(object = true_value_low_ac, 
-                                    filename = "true_value_low_ac.rds", 
-                                    path = paste0(getwd(), "/4_Results"), 
-                                    overwrite = FALSE)
+UtilityFunctions::save_rds(object = true_value_low_ac_class,
+                           filename = "true_value_low_ac_class.rds", 
+                           path = paste0(getwd(), "/4_Results"), 
+                           overwrite = overwrite)
+
+UtilityFunctions::save_rds(object = true_value_low_ac_landscape,
+                           filename = "true_value_low_ac_landscape.rds", 
+                           path = paste0(getwd(), "/4_Results"), 
+                           overwrite = overwrite)
 
 # Medium AC
-UtilityFunctions::Save.Function.rds(object = true_value_medium_ac, 
-                                    filename = "true_value_medium_ac.rds", 
-                                    path = paste0(getwd(), "/4_Results"), 
-                                    overwrite = FALSE)
+UtilityFunctions::save_rds(object = true_value_medium_ac_class,
+                           filename = "true_value_medium_ac_class.rds", 
+                           path = paste0(getwd(), "/4_Results"), 
+                           overwrite = overwrite)
+
+UtilityFunctions::save_rds(object = true_value_medium_ac_landscape,
+                           filename = "true_value_medium_ac_landscape.rds", 
+                           path = paste0(getwd(), "/4_Results"), 
+                           overwrite = overwrite)
 
 # High AC
-UtilityFunctions::Save.Function.rds(object = true_value_high_ac, 
-                                    filename = "true_value_high_ac.rds", 
-                                    path = paste0(getwd(), "/4_Results"), 
-                                    overwrite = FALSE)
+UtilityFunctions::save_rds(object = true_value_high_ac_class,
+                           filename = "true_value_high_ac_class.rds", 
+                           path = paste0(getwd(), "/4_Results"), 
+                           overwrite = overwrite)
+
+UtilityFunctions::save_rds(object = true_value_high_ac_landscape,
+                           filename = "true_value_high_ac_landscape.rds", 
+                           path = paste0(getwd(), "/4_Results"), 
+                           overwrite = overwrite)
 
 
 

@@ -21,63 +21,66 @@ landscapes_high_ac <- read_rds(paste0(getwd(),
                                       "/4_Results/landscapes_high_ac.rds"))
 
 
-#### 3. Run sampling ####
+#### 3. Specify future topology ####
+# 
+# future_map for 1) alpha (x) 2) simulation runs (y) 3) within null model function
+# login node -> { cluster nodes } -> { multiple cores }
+# 
+login <- future::tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
+bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
+                      resources = list(job.name = 'sample_lsm',
+                                       log.file = 'sample_lsm.log',
+                                       queue = 'mpi-short',
+                                       walltime = '02:00',
+                                       processes = 1))
 
-options(rasterMaxMemory = 1e10)
+future::plan(list(login, bsub, future::sequential))
 
-# future::plan(list(future::sequential, future::multiprocess))
-# future::plan(sequential)
+# future::plan(future::multiprocess)
+
+#### 4. Run sampling ####
 
 # Low AC
-walk(seq_len(nlayers(landscapes_low_ac)), function(current_landscape) {
-  walk(seq_len(nrow(simulation_design)), function(current_design) {
+sampling_low_ac <- furrr::future_map(1:3, function(current_landscape) {
+  furrr::future_map(1:5, function(current_design) {
 
     sample_plots(
       landscape = landscapes_low_ac[[current_landscape]],
-      what = "class",
+      what = c("class", "landscape"),
       shape = simulation_design$shape[[current_design]],
       size = simulation_design$size[[current_design]],
       type = simulation_design$type[[current_design]],
-      n    = simulation_design$n[[current_design]], 
-      n_sim_design = current_design, 
-      n_landscape = current_landscape,
-      path = "/3_Experiment/0_Clippings/1_Low_AC/"
+      n    = simulation_design$n[[current_design]]
     )
   })
 })
 
 # Medium AC
-walk(seq_len(nlayers(landscapes_low_ac)), function(current_landscape) {
-  walk(seq_len(nrow(simulation_design)), function(current_design) {
+sampling_medium_ac <- purrr::map(1:length(landscapes_medium_ac), function(current_landscape) {
+  purrr::map(1:nrow(simulation_design), function(current_design) {
     
     sample_plots(
       landscape = landscapes_medium_ac[[current_landscape]],
-      what = "class",
+      what = c("class", "landscape"),
       shape = simulation_design$shape[[current_design]],
       size = simulation_design$size[[current_design]],
       type = simulation_design$type[[current_design]],
-      n    = simulation_design$n[[current_design]], 
-      n_sim_design = current_design, 
-      n_landscape = current_landscape,
-      path = "/3_Experiment/0_Clippings/2_Medium_AC/"
+      n    = simulation_design$n[[current_design]]
     )
   })
 })
 
 # High AC
-walk(seq_len(nlayers(landscapes_low_ac)), function(current_landscape) {
-  walk(seq_len(nrow(simulation_design)), function(current_design) {
+sampling_high_ac <- purrr::map(1:length(landscapes_high_ac), function(current_landscape) {
+  purrr::map(1:nrow(simulation_design), function(current_design) {
 
     sample_plots(
       landscape = landscapes_high_ac[[current_landscape]],
-      what = "class",
+      what = c("class", "landscape"),
       shape = simulation_design$shape[[current_design]],
       size = simulation_design$size[[current_design]],
       type = simulation_design$type[[current_design]],
-      n    = simulation_design$n[[current_design]], 
-      n_sim_design = current_design, 
-      n_landscape = current_landscape,
-      path = "/3_Experiment/0_Clippings/3_High_AC/"
+      n    = simulation_design$n[[current_design]]
     )
   })
 })

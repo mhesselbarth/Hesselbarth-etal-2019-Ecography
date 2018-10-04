@@ -23,6 +23,7 @@ landscapes_high_ac <- read_rds(paste0(getwd(),
 sampling_low_ac <- clustermq::Q(fun = sample_plots,
                                 landscape = rep(landscapes_low_ac, each = nrow(simulation_design)),
                                 shape = as.character(simulation_design$shape), 
+                                size = simulation_design$size,
                                 type = as.character(simulation_design$type),
                                 n = simulation_design$n, 
                                 const = list(what = c("class", "landscape")), 
@@ -38,6 +39,7 @@ sampling_low_ac <- clustermq::Q(fun = sample_plots,
 sampling_medium_ac <- clustermq::Q(fun = sample_plots,
                                 landscape = rep(landscapes_medium_ac, each = nrow(simulation_design)),
                                 shape = as.character(simulation_design$shape), 
+                                size = simulation_design$size,
                                 type = as.character(simulation_design$type),
                                 n = simulation_design$n, 
                                 const = list(what = c("class", "landscape")), 
@@ -53,6 +55,7 @@ sampling_medium_ac <- clustermq::Q(fun = sample_plots,
 sampling_high_ac <- clustermq::Q(fun = sample_plots,
                                 landscape = rep(landscapes_high_ac, each = nrow(simulation_design)),
                                 shape = as.character(simulation_design$shape), 
+                                size = simulation_design$size,
                                 type = as.character(simulation_design$type),
                                 n = simulation_design$n, 
                                 const = list(what = c("class", "landscape")), 
@@ -69,19 +72,19 @@ sampling_high_ac <- clustermq::Q(fun = sample_plots,
 
 overwrite <- FALSE
 
-UtilityFunctions::Save.Function.rds(object = sampling_low_ac,
-                                    filename = "sampling_low_ac.rds",
-                                    path = paste0(getwd(), "/4_Results"),
-                                    overwrite = overwrite)
+UtilityFunctions::save_rds(object = sampling_low_ac,
+                           filename = "sampling_low_ac.rds",
+                           path = paste0(getwd(), "/3_Output"),
+                           overwrite = overwrite)
 
-UtilityFunctions::Save.Function.rds(object = sampling_medium_ac,
-                                    filename = "sampling_medium_ac.rds",
-                                    path = paste0(getwd(), "/4_Results"),
-                                    overwrite = overwrite)
+UtilityFunctions::save_rds(object = sampling_medium_ac,
+                           filename = "sampling_medium_ac.rds",
+                           path = paste0(getwd(), "/3_Output"),
+                           overwrite = overwrite)
 
-UtilityFunctions::Save.Function.rds(object = sampling_high_ac,
-                                    filename = "sampling_high_ac.rds",
-                                    path = paste0(getwd(), "/4_Results"),
-                                    overwrite = overwrite)
+UtilityFunctions::save_rds(object = sampling_high_ac,
+                           filename = "sampling_high_ac.rds",
+                           path = paste0(getwd(), "/3_Output"),
+                           overwrite = overwrite)
 
 

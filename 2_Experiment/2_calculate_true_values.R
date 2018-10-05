@@ -38,8 +38,9 @@ true_value_low_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
                                                progress = FALSE), 
                                   n_jobs = 10, 
                                   template = list(queue = "mpi-short", 
-                                                  walltime = "01:00", 
-                                                  processes = 1))
+                                                  walltime = "02:00", 
+                                                  processes = 1, 
+                                                  log_file = "debug.log"))
 
 # Medium AC
 true_value_medium_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
@@ -58,8 +59,9 @@ true_value_medium_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
                                                   progress = FALSE),
                                      n_jobs = 10, 
                                      template = list(queue = "mpi-short", 
-                                                     walltime = "01:00", 
-                                                     processes = 1))
+                                                     walltime = "02:00", 
+                                                     processes = 1, 
+                                                     log_file = "debug.log"))
 
 # High AC
 true_value_high_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
@@ -78,8 +80,10 @@ true_value_high_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
                                                 progress = FALSE),
                                    n_jobs = 10, 
                                    template = list(queue = "mpi-short", 
-                                                   walltime = "01:00", 
-                                                   processes = 1))
+                                                   walltime = "02:00", 
+                                                   processes = 1, 
+                                                   log_file = "debug.log"))
+
 
 #### 4. Save results ####
 
@@ -88,17 +92,17 @@ overwrite <- FALSE
 # Low AC
 UtilityFunctions::save_rds(object = true_value_low_ac,
                            filename = "true_value_low_ac.rds", 
-                           path = paste0(getwd(), "/4_Results"), 
+                           path = paste0(getwd(), "/3_Output"), 
                            overwrite = overwrite)
 
 # Medium AC
 UtilityFunctions::save_rds(object = true_value_medium_ac,
                            filename = "true_value_medium_ac.rds", 
-                           path = paste0(getwd(), "/4_Results"), 
+                           path = paste0(getwd(), "/3_Output"), 
                            overwrite = overwrite)
 
 # High AC
-UtilityFunctions::save_rds(object = true_value_high_ac_class,
+UtilityFunctions::save_rds(object = true_value_high_ac,
                            filename = "true_value_high_ac.rds", 
-                           path = paste0(getwd(), "/4_Results"), 
+                           path = paste0(getwd(), "/3_Output"), 
                            overwrite = overwrite)

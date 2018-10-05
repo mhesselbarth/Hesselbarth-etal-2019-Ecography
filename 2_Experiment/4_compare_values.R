@@ -29,7 +29,40 @@ true_value_high_ac <- readr::read_rds(path = paste0(getwd(),
 
 
 
-#### 3. Calculate percentage of correct results #### 
+#### 3. Select only comparable metrics
+
+absolute_metrics <- c("ca", "ndca", "np", "pafrac", "pr", "ta", "tca", "te")
+
+# Low AC
+true_value_low_ac <- purrr::map(true_value_low_ac, function(current_landscape) { 
+  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+  })
+
+sampling_low_ac <- purrr::map(sampling_low_ac, function(current_landscape) { 
+  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+})
+
+
+# Medium AC
+true_value_medium_ac <- purrr::map(true_value_medium_ac, function(current_landscape) { 
+  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+})
+
+sampling_medium_ac <- purrr::map(sampling_medium_ac, function(current_landscape) { 
+  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+})
+
+
+# High AC
+true_value_high_ac <- purrr::map(true_value_high_ac, function(current_landscape) { 
+  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+})
+
+sampling_high_ac <- purrr::map(sampling_high_ac, function(current_landscape) { 
+  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+})
+
+#### 4. Calculate percentage of correct results #### 
 
 # Low AC
 percentage_low_ac <- sampling_low_ac %>%

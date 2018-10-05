@@ -5,26 +5,37 @@ purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = 
 
 #### 2. Create landscapes ####  
 
-future::plan(future::multiprocess)
-
 # Low AC
-landscapes_low_ac <- purrr::map(simulation_run, function(seed) {
-  landscape_low_autocorrelation(seed = seed)
-})
+landscapes_low_ac <- clustermq::Q(fun = simulate_landscapes, 
+                                  user_seed = simulation_run,
+                                  const = list(ac = "low"),
+                                  n_jobs = length(simulation_run),
+                                  template = list(queue = "mpi-short", 
+                                                  walltime = "02:00", 
+                                                  processes = 1))
+
 
 # Medium AC
-landscapes_medium_ac <- purrr::map(simulation_run, function(seed) {
-  landscape_medium_autocorrelation(seed = seed)
-})
+landscapes_medium_ac <- clustermq::Q(fun = simulate_landscapes, 
+                                     user_seed = simulation_run,
+                                     const = list(ac = "medium"),
+                                     n_jobs = length(simulation_run),
+                                     template = list(queue = "mpi-short", 
+                                                     walltime = "02:00", 
+                                                     processes = 1))
 
 # High AC
-landscapes_high_ac <- purrr::map(simulation_run, function(seed) {
-  landscape_high_autocorrelation(seed = seed)
-})
+landscapes_high_ac <- clustermq::Q(fun = simulate_landscapes, 
+                                   user_seed = simulation_run,
+                                   const = list(ac = "high"),
+                                   n_jobs = length(simulation_run),
+                                   template = list(queue = "mpi-short", 
+                                                   walltime = "02:00", 
+                                                   processes = 1))
 
 #### 3. Save landscapes ####
 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # Low AC
 UtilityFunctions::save_rds(object = landscapes_low_ac, 

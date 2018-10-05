@@ -1,6 +1,5 @@
 
 #### 1. Load packages ####
-
 check.packages <- function(pkg){
   new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
   if (length(new.pkg)) 
@@ -8,17 +7,17 @@ check.packages <- function(pkg){
   sapply(pkg, require, character.only = TRUE)
 }
 
-packages<-c("landscapemetrics",
-            "landscapetools",
-            "magrittr", 
-            "maptools", 
-            "clustermq",
-            "NLMR",
-            "raster",
-            "rgeos",
-            "sp",
-            "tidyverse"
-)
+packages <- c(
+  "clustermq",
+  "dplyr", 
+  "landscapemetrics",
+  "landscapetools",
+  "maptools", 
+  "NLMR",
+  "raster",
+  "readr",
+  "sp"
+  )
 
 check.packages(packages)
 
@@ -35,7 +34,7 @@ simulation_design <- expand.grid(size = size,
   tibble::as.tibble()
 
 
-simulation_run <- seq(5, 50, 5) #seq(5,50, 5)
+simulation_run <- seq(5, 50, 5)
 
 rm(packages, check.packages,
    size, n, shape, type)

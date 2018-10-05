@@ -6,20 +6,19 @@ purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = 
 #### 2. Import landscapes #### 
 
 # Low AC
-landscapes_low_ac <- read_rds(paste0(getwd(), 
-                                     "/3_Output/landscapes_low_ac.rds"))
+landscapes_low_ac <- readr::read_rds(paste0(getwd(), 
+                                            "/3_Output/landscapes_low_ac.rds"))
 
 # Medium AC
-landscapes_medium_ac <- read_rds(paste0(getwd(), 
-                                        "/3_Output/landscapes_medium_ac.rds"))
+landscapes_medium_ac <- readr::read_rds(paste0(getwd(), 
+                                               "/3_Output/landscapes_medium_ac.rds"))
 
 # High AC
-landscapes_high_ac <- read_rds(paste0(getwd(), 
-                                      "/3_Output/landscapes_high_ac.rds"))
+landscapes_high_ac <- readr::read_rds(paste0(getwd(), 
+                                             "/3_Output/landscapes_high_ac.rds"))
 
 
 #### 3. Calculate "real" values ####
-
 
 # Low AC
 true_value_low_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
@@ -39,8 +38,7 @@ true_value_low_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
                                   n_jobs = 10, 
                                   template = list(queue = "mpi-short", 
                                                   walltime = "02:00", 
-                                                  processes = 1, 
-                                                  log_file = "debug.log"))
+                                                  processes = 1))
 
 # Medium AC
 true_value_medium_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
@@ -60,8 +58,7 @@ true_value_medium_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
                                      n_jobs = 10, 
                                      template = list(queue = "mpi-short", 
                                                      walltime = "02:00", 
-                                                     processes = 1, 
-                                                     log_file = "debug.log"))
+                                                     processes = 1))
 
 # High AC
 true_value_high_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
@@ -81,8 +78,7 @@ true_value_high_ac <- clustermq::Q(fun = landscapemetrics::calculate_lsm,
                                    n_jobs = 10, 
                                    template = list(queue = "mpi-short", 
                                                    walltime = "02:00", 
-                                                   processes = 1, 
-                                                   log_file = "debug.log"))
+                                                   processes = 1))
 
 
 #### 4. Save results ####

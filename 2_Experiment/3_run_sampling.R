@@ -32,7 +32,7 @@ sampling_low_ac <- clustermq::Q(fun = sample_plots,
                                               sample_rectangle = sample_rectangle),
                                 n_jobs = 540, 
                                 template = list(queue = "mpi-short", 
-                                                walltime = "01:00", 
+                                                walltime = "02:00", 
                                                 processes = 1))
 
 # Medium AC
@@ -48,7 +48,7 @@ sampling_medium_ac <- clustermq::Q(fun = sample_plots,
                                               sample_rectangle = sample_rectangle),
                                 n_jobs = 540, 
                                 template = list(queue = "mpi-short", 
-                                                walltime = "01:00", 
+                                                walltime = "02:00", 
                                                 processes = 1))
 
 # High AC
@@ -64,7 +64,7 @@ sampling_high_ac <- clustermq::Q(fun = sample_plots,
                                               sample_rectangle = sample_rectangle),
                                 n_jobs = 540, 
                                 template = list(queue = "mpi-short", 
-                                                walltime = "01:00", 
+                                                walltime = "02:00", 
                                                 processes = 1))
 
 

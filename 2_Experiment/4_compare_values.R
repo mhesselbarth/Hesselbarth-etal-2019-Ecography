@@ -1,34 +1,30 @@
 
 #### 1. Source functions #### 
-purrr::walk(list.files(path = "1_Setup", pattern = ".R", full.names = TRUE), 
+purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = TRUE), 
             function(x) source(x))
-
-purrr::walk(list.files(path = "2_Functions", pattern = ".R", full.names = TRUE), 
-            function(x) source(x))
-
 
 #### 2. Import results #### 
 
 # Low AC
 sampling_low_ac <- readr::read_rds(path = paste0(getwd(), 
-                                                 "/4_Results/sampling_low_ac.rds"))
+                                                 "/3_Output/sampling_low_ac.rds"))
 
 true_value_low_ac <- readr::read_rds(path = paste0(getwd(), 
-                                                   "/4_Results/true_value_low_ac.rds"))
+                                                   "/3_Output/true_value_low_ac.rds"))
 
 # Medium AC
 sampling_medium_ac <- readr::read_rds(path = paste0(getwd(),
-                                                   "/4_Results/sampling_medium_ac.rds"))
+                                                   "/3_Output/sampling_medium_ac.rds"))
 
 true_value_medium_ac <- readr::read_rds(path = paste0(getwd(), 
-                                                   "/4_Results/true_value_medium_ac.rds"))
+                                                   "/3_Output/true_value_medium_ac.rds"))
 
 # High AC
 sampling_high_ac <- readr::read_rds(path = paste0(getwd(),
-                                                 "/4_Results/sampling_high_ac.rds"))
+                                                 "/3_Output/sampling_high_ac.rds"))
 
 true_value_high_ac <- readr::read_rds(path = paste0(getwd(), 
-                                                   "/4_Results/true_value_high_ac.rds"))
+                                                   "/3_Output/true_value_high_ac.rds"))
 
 
 

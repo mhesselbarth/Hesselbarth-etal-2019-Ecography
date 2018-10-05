@@ -28,8 +28,8 @@ true_value_low_ac <- clustermq::Q(fun = calculate_lsm_helper,
                                                classes_max = 5,  
                                                verbose = FALSE),
                                   n_jobs = 10, 
-                                  template = list(queue = "mpi-short", 
-                                                  walltime = "02:00", 
+                                  template = list(queue = "mpi", 
+                                                  walltime = "06:00", 
                                                   processes = 1))
 
 # Medium AC
@@ -40,8 +40,8 @@ true_value_medium_ac <- clustermq::Q(fun = calculate_lsm_helper,
                                                   classes_max = 5,  
                                                   verbose = FALSE),
                                      n_jobs = 10, 
-                                     template = list(queue = "mpi-short", 
-                                                     walltime = "02:00", 
+                                     template = list(queue = "mpi", 
+                                                     walltime = "06:00", 
                                                      processes = 1))
 
 # High AC
@@ -52,8 +52,8 @@ true_value_high_ac <- clustermq::Q(fun = calculate_lsm_helper,
                                                 classes_max = 5,  
                                                 verbose = FALSE),
                                    n_jobs = 10, 
-                                   template = list(queue = "mpi-short", 
-                                                   walltime = "02:00", 
+                                   template = list(queue = "mpi", 
+                                                   walltime = "06:00", 
                                                    processes = 1))
 
 

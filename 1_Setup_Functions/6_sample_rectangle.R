@@ -37,14 +37,19 @@ sample_rectangle <- function(landscape, i, what, size, type, n) {
                                    coords[id, 2]))
   })
   
-  result <- purrr::map_dfr(seq_along(sample_plots), function(plot_id) {
+  sample_area <- purrr::map_dfr(seq_along(sample_plots), function(plot_id) {
     
     landscape_crop <- raster::crop(x = landscape[[i]], y = sample_plots[[plot_id]])
     landscape_mask <- raster::mask(x = landscape_crop, mask = sample_plots[[plot_id]])
+  })
     
-    results <- landscapemetrics::calculate_lsm(landscape_mask, 
-                                               what = what, verbose = FALSE)},
-    .id = "sample_plot")
+  metrics <- landscapemetrics::calculate_lsm(sample_area, 
+                                             what = what, 
+                                             classes_max = 5,
+                                             verbose = FALSE)
+  
+  metrics_nested <- tidyr::nest(metrics, -layer, .key = "metrics")
+  result <- dplyr::mutate(metrics_nested, sample_plot = sample_area)
   
   return(result)
 }

@@ -34,35 +34,64 @@ true_value_high_ac <- readr::read_rds(path = paste0(getwd(),
 absolute_metrics <- c("ca", "ndca", "np", "pafrac", "pr", "ta", "tca", "te")
 
 # Low AC
-true_value_low_ac <- purrr::map(true_value_low_ac, function(current_landscape) { 
-  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
-  })
+filtered_true_value_low_ac <- purrr::map(seq_along(true_value_low_ac), function(current_landscape) { 
+  
+  df_filtered <- dplyr::filter(true_value_low_ac[[current_landscape]], 
+                               level != "patch" & !(metric %in% absolute_metrics))
+  
+  dplyr::mutate(df_filtered, i = current_landscape)
+})
 
-sampling_low_ac <- purrr::map(sampling_low_ac, function(current_landscape) { 
-  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+filtered_sampling_low_ac <- purrr::map(seq_along(sampling_low_ac), function(current_sampling) { 
+  
+  df_filtered <- dplyr::filter(sampling_low_ac[[current_sampling]], 
+                               level != "patch" & !(metric %in% absolute_metrics))
+  
+  dplyr::mutate(df_filtered, i = simulation_design$i[current_sampling])
 })
 
 
 # Medium AC
-true_value_medium_ac <- purrr::map(true_value_medium_ac, function(current_landscape) { 
-  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+filtered_true_value_medium_ac <- purrr::map(seq_along(true_value_medium_ac), function(current_landscape) { 
+  
+  df_filtered <- dplyr::filter(true_value_medium_ac[[current_landscape]], 
+                               level != "patch" & !(metric %in% absolute_metrics))
+  
+  dplyr::mutate(df_filtered, i = current_landscape)
 })
 
-sampling_medium_ac <- purrr::map(sampling_medium_ac, function(current_landscape) { 
-  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+filtered_sampling_medium_ac <- purrr::map(seq_along(sampling_medium_ac), function(current_sampling) { 
+  
+  df_filtered <- dplyr::filter(sampling_medium_ac[[current_sampling]], 
+                               level != "patch" & !(metric %in% absolute_metrics))
+  
+  dplyr::mutate(df_filtered, i = simulation_design$i[current_sampling])
 })
 
 
 # High AC
-true_value_high_ac <- purrr::map(true_value_high_ac, function(current_landscape) { 
-  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+filtered_true_value_high_ac <- purrr::map(seq_along(true_value_high_ac), function(current_landscape) { 
+  
+  df_filtered <- dplyr::filter(true_value_high_ac[[current_landscape]], 
+                               level != "patch" & !(metric %in% absolute_metrics))
+  
+  dplyr::mutate(df_filtered, i = current_landscape)
 })
 
-sampling_high_ac <- purrr::map(sampling_high_ac, function(current_landscape) { 
-  dplyr::filter(current_landscape, level != "patch" & !(metric %in% absolute_metrics))
+filtered_sampling_high_ac <- purrr::map(seq_along(sampling_high_ac), function(current_sampling) { 
+  
+  df_filtered <- dplyr::filter(sampling_high_ac[[current_sampling]], 
+                               level != "patch" & !(metric %in% absolute_metrics))
+  
+  dplyr::mutate(df_filtered, i = simulation_design$i[current_sampling])
 })
 
-#### 4. Calculate percentage of correct results #### 
+#### 4. Calculate sample estimation #### 
+
+purrr::map(filtered_sampling_high_ac, function(x) { 
+  estimate_landscape_value(x)
+})
+
 
 # Low AC
 percentage_low_ac <- sampling_low_ac %>%

@@ -17,7 +17,8 @@ packages <- c(
   "purrr",
   "raster",
   "readr",
-  "sp"
+  "sp", 
+  "tidyr"
   )
 
 check.packages(packages)

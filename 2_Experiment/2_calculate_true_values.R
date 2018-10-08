@@ -59,7 +59,7 @@ true_value_high_ac <- clustermq::Q(fun = calculate_lsm_helper,
 
 #### 4. Save results ####
 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # Low AC
 UtilityFunctions::save_rds(object = true_value_low_ac,

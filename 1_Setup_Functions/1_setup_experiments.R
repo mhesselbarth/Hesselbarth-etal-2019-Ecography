@@ -34,7 +34,8 @@ simulation_design <- tibble::as.tibble(expand.grid(size = size,
                                                    n = n, 
                                                    shape = shape, 
                                                    type = type, 
-                                                   i = seq_along(simulation_run)))
+                                                   i = seq_along(simulation_run), 
+                                                   stringsAsFactors = FALSE))
 
 rm(packages, check.packages,
    size, n, shape, type)

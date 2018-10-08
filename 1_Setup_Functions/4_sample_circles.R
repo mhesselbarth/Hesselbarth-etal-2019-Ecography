@@ -15,6 +15,7 @@ sample_circles <- function(landscape, i, what, size, type, n) {
     
     landscape_crop <- raster::crop(x = landscape[[i]], y = sample_plots[plot_id])
     landscape_mask <- raster::mask(x = landscape_crop, mask = sample_plots[plot_id])
+    
     return(landscape_mask)
   })
   

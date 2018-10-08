@@ -17,7 +17,6 @@ sample_squares <- function(landscape, i, what, size, type, n) {
     landscape_mask <- raster::mask(x = landscape_crop, mask = sample_plots[plot_id])
     
     return(landscape_mask)
-    
   })
   
   metrics <- landscapemetrics::calculate_lsm(sample_area,

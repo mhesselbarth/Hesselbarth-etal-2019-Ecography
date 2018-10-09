@@ -10,6 +10,7 @@ check.packages <- function(pkg){
 packages <- c(
   "clustermq",
   "dplyr", 
+  "ggplot2",
   "landscapemetrics",
   "landscapetools",
   "maptools", 

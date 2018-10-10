@@ -24,12 +24,23 @@ deviation_high_ac <- read_rds(paste0(getwd(),
 deviation_low_ac_landscape <- dplyr::filter(deviation_low_ac, level == "landscape") %>% 
   dplyr::left_join(unique(simulation_design[, -5]), 
                    by = c("simulation_id" = "id"), 
-                   suffix = c(".dev", ".scheme")) %>% 
-  dplyr::mutate(sampled_area = size * n.scheme)
-  dplyr::group_by(level) %>%
-  dplyr::arrange(sampled_area, .by_group = TRUE)
+                   suffix = c(".dev", ".scheme"))
 
-ggplot2::ggplot(data = deviation_low_ac_landscape) + 
-  ggplot2::geom_point(ggplot2::aes(x = sampled_area, y = correct, 
-                                   col = type.scheme, shape = shape)) + 
-  ggplot2::facet_wrap(~ type.dev)
+aggregation_metrics <- dplyr::filter(deviation_low_ac_landscape, type.dev == "aggregation metric" & type.scheme == "random")
+aggregation_metrics$shape <- as.numeric(as.factor(aggregation_metrics$shape))
+
+aggregation_metrics <- dplyr::mutate(aggregation_metrics, 
+              size = case_when(size == 100 ~ 1, 
+                               size == 1250 ~ 2, 
+                               size == 7500 ~ 3), 
+              n.scheme = case_when(n.scheme == 10 ~ 1, 
+                                   n.scheme == 25 ~ 2, 
+                                   n.scheme == 50 ~ 3))
+            
+breaks = c(1,2,3)
+
+ggtern(data = aggregation_metrics, aes(x = n.scheme, 
+                                       y = size, 
+                                       z = shape, 
+                                       color = correct)) + 
+  geom_point(size = 5)

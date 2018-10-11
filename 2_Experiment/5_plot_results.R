@@ -26,21 +26,30 @@ deviation_low_ac_landscape <- dplyr::filter(deviation_low_ac, level == "landscap
                    by = c("simulation_id" = "id"), 
                    suffix = c(".dev", ".scheme"))
 
-aggregation_metrics <- dplyr::filter(deviation_low_ac_landscape, type.dev == "aggregation metric" & type.scheme == "random")
-aggregation_metrics$shape <- as.numeric(as.factor(aggregation_metrics$shape))
 
-aggregation_metrics <- dplyr::mutate(aggregation_metrics, 
-              size = case_when(size == 100 ~ 1, 
-                               size == 1250 ~ 2, 
-                               size == 7500 ~ 3), 
-              n.scheme = case_when(n.scheme == 10 ~ 1, 
-                                   n.scheme == 25 ~ 2, 
-                                   n.scheme == 50 ~ 3))
-            
-breaks = c(1,2,3)
+deviation_low_ac_landscape_sorted <- tidyr::unite(deviation_low_ac_landscape, 
+                                                  unique_label, 
+                                                  n.scheme, size, shape, type.scheme,
+                                                  remove = FALSE) %>% 
+  dplyr::arrange(type.scheme, shape, size, n.scheme)
 
-ggtern(data = aggregation_metrics, aes(x = n.scheme, 
-                                       y = size, 
-                                       z = shape, 
-                                       color = correct)) + 
-  geom_point(size = 5)
+deviation_low_ac_landscape_sorted$unique_id <- 1:nrow(deviation_low_ac_landscape_sorted)
+deviation_low_ac_landscape_sorted$unique_label <- factor(deviation_low_ac_landscape_sorted$unique_label, 
+                                                         levels = unique(deviation_low_ac_landscape_sorted$unique_label))
+
+
+# WRONG SAMPLING SCHEMES! 
+ggplot(data = deviation_low_ac_landscape_sorted, 
+       aes(x = type.dev,
+           y = unique_label)) +
+  geom_tile(aes(fill = correct)) + 
+  geom_text(aes(x = type.dev,
+                y = unique_label,
+                label = round(correct, 2))) +
+  scale_fill_gradient(name = "% Correct \nestimation",
+                      low = "red", high = "green", limits = c(0, 1)) + #+
+  labs(x = "Landscape metrics", y = "Sample scheme")
+
+
+
+

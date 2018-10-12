@@ -5,7 +5,7 @@ purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = 
 
 absolute_metrics <- c("ca", "ndca", "np", "pafrac", "pr", "ta", "tca", "te")
 
-simulation_design$id <- rep(1:(nrow(simulation_design)/10), times = 10)
+simulation_design$id <- rep(1:(nrow(simulation_design) / 25), times = 25)
 
 #### 1. Low AC ####
 

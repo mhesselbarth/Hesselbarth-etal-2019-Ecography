@@ -20,9 +20,9 @@ sample_squares <- function(landscape, i, what, size, type, n) {
   })
   
   result <- landscapemetrics::calculate_lsm(sample_area,
-                                             what = what, 
-                                             classes_max = 5,
-                                             verbose = FALSE)
+                                            what = what, 
+                                            classes_max = 5,
+                                            verbose = FALSE)
   
   # metrics_nested <- tidyr::nest(metrics, -layer, .key = "metrics")
   # result <- dplyr::mutate(metrics_nested, sample_plot = sample_area)

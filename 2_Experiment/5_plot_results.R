@@ -32,7 +32,9 @@ deviation_low_ac_landscape_sorted <- tidyr::unite(deviation_low_ac_landscape,
                                                   n.scheme, size, shape, type.scheme,
                                                   remove = FALSE) %>% 
   dplyr::arrange(type.scheme, shape, size, n.scheme) %>% 
-  dplyr::mutate(correct_bins = cut(correct, breaks = 10))
+  dplyr::mutate(correct_bins = findInterval(correct,
+                                            seq(0,1, by = 0.1),
+                                            rightmost.closed = TRUE))
 
 deviation_low_ac_landscape_sorted$unique_id <- 1:nrow(deviation_low_ac_landscape_sorted)
 deviation_low_ac_landscape_sorted$unique_label <- factor(deviation_low_ac_landscape_sorted$unique_label, 
@@ -43,14 +45,22 @@ deviation_low_ac_landscape_sorted$unique_label <- factor(deviation_low_ac_landsc
 ggplot(data = deviation_low_ac_landscape_sorted, 
        aes(x = type.dev,
            y = unique_label)) +
-  geom_tile(aes(fill = correct_bins)) + 
-  geom_text(aes(x = type.dev,
-                y = unique_label,
-                label = round(correct, 2))) +
-  # scale_fill_gradient(name = "% Correct \nestimation",
-  #                     low = "red", high = "green", limits = c(0, 1)) + #+
-  labs(x = "Landscape metrics", y = "Sample scheme")
-
-
-
+  geom_tile(aes(fill = factor(correct_bins))) + 
+  scale_fill_brewer(name = "% Correct \nestimation",
+                    type = "div",
+                    palette = "Spectral",
+                                  labels = c(
+                                    " < 10",
+                                    " < 20",
+                                    " < 30",
+                                    " < 40",
+                                    " < 50",
+                                    " < 60",
+                                    " < 70",
+                                    " < 80",
+                                    " < 90",
+                                    " < 100"
+                                  )) + 
+  labs(x = "Landscape metrics", y = "Sample scheme") + 
+  hrbrthemes::theme_ipsum(axis_title_size = 14)
 

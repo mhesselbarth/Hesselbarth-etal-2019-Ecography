@@ -7,14 +7,15 @@ absolute_metrics <- c("ca", "ndca", "np", "pafrac", "pr", "ta", "tca", "te")
 
 simulation_design$id <- rep(1:(nrow(simulation_design) / 25), times = 25)
 
+overwrite <- TRUE
+
 #### 1. Low AC ####
 
-# Low AC
 sampling_low_ac <- readr::read_rds(path = paste0(getwd(), 
-                                                 "/3_Output/sampling_low_ac.rds"))
+                                                 "/3_Output/sampling_low_ac_25.rds"))
 
 true_value_low_ac <- readr::read_rds(path = paste0(getwd(), 
-                                                   "/3_Output/true_value_low_ac.rds"))
+                                                   "/3_Output/true_value_low_ac_25.rds"))
 
 for(i in 1:length(true_value_low_ac)) {
   true_value_low_ac[[i]] <- dplyr::filter(true_value_low_ac[[i]], 
@@ -39,10 +40,9 @@ for(i in 1:length(sampling_low_ac)) {
 deviation_low_ac <- bind_rows(sampling_low_ac) %>% 
   unnest(metrics) %>%
   dplyr::group_by(simulation_id, landscape_id, level, class, metric) %>%
-  dplyr::summarise(n = n(),
-                   mean = mean(value, na.rm = TRUE),
+  dplyr::summarise(mean = mean(value, na.rm = TRUE),
                    sd = sd(value, na.rm = TRUE),
-                   ci = 1.96 *  (sd / sqrt(n)),
+                   ci = 1.96 *  (sd / sqrt(n())),
                    lo = mean - ci,
                    hi = mean + ci) %>%
   dplyr::left_join(true_value_low_ac, 
@@ -52,25 +52,24 @@ deviation_low_ac <- bind_rows(sampling_low_ac) %>%
                           "metric" = "metric")) %>%
   dplyr::mutate(inside_ci = dplyr::case_when(lo < value & value < hi ~ 1, 
                                              lo > value | hi < value ~ 0), 
-                inside_ci = dplyr::case_when(is.na(inside_ci) ~ 0, 
-                                             !is.na(inside_ci) ~ inside_ci)) %>% 
+                deviation_rel = (mean - value) / value) %>% 
   dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
-                   by = "metric") %>% 
-  dplyr::group_by(simulation_id, level, class, type) %>% 
-  dplyr::summarise(n = n(), 
-                   correct = mean(inside_ci, na.rm = TRUE), 
-                   false = 1 - correct)
+                   by = "metric")
 
-rm(sampling_low_ac, true_value_low_ac)
+UtilityFunctions::save_rds(object = deviation_low_ac, 
+                           filename = "deviation_low_ac_25.rds", 
+                           path = paste0(getwd(), "/3_Output"),
+                           overwrite = overwrite)
+
+# rm(sampling_low_ac, true_value_low_ac)
 
 #### 2. Medium AC ####
 
-# medium AC
 sampling_medium_ac <- readr::read_rds(path = paste0(getwd(), 
-                                                 "/3_Output/sampling_medium_ac.rds"))
+                                                 "/3_Output/sampling_medium_ac_25.rds"))
 
 true_value_medium_ac <- readr::read_rds(path = paste0(getwd(), 
-                                                   "/3_Output/true_value_medium_ac.rds"))
+                                                   "/3_Output/true_value_medium_ac_25.rds"))
 
 for(i in 1:length(true_value_medium_ac)) {
   true_value_medium_ac[[i]] <- dplyr::filter(true_value_medium_ac[[i]], 
@@ -108,25 +107,25 @@ deviation_medium_ac <- bind_rows(sampling_medium_ac) %>%
                           "metric" = "metric")) %>%
   dplyr::mutate(inside_ci = dplyr::case_when(lo < value & value < hi ~ 1, 
                                              lo > value | hi < value ~ 0), 
-                inside_ci = dplyr::case_when(is.na(inside_ci) ~ 0, 
-                                             !is.na(inside_ci) ~ inside_ci)) %>% 
+                deviation_rel = (mean - value) / value) %>% 
   dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
-                   by = "metric") %>% 
-  dplyr::group_by(simulation_id, level, class, type) %>% 
-  dplyr::summarise(n = n(), 
-                   correct = mean(inside_ci, na.rm = TRUE), 
-                   false = 1 - correct)
+                   by = "metric")
 
-rm(sampling_medium_ac, true_value_medium_ac)
+UtilityFunctions::save_rds(object = deviation_medium_ac, 
+                           filename = "deviation_medium_ac_25.rds", 
+                           path = paste0(getwd(), "/3_Output"),
+                           overwrite = overwrite)
+
+# rm(sampling_medium_ac, true_value_medium_ac)
 
 #### 3. High AC ####
 
 # high AC
 sampling_high_ac <- readr::read_rds(path = paste0(getwd(), 
-                                                 "/3_Output/sampling_high_ac.rds"))
+                                                 "/3_Output/sampling_high_ac_25.rds"))
 
 true_value_high_ac <- readr::read_rds(path = paste0(getwd(), 
-                                                   "/3_Output/true_value_high_ac.rds"))
+                                                   "/3_Output/true_value_high_ac_25.rds"))
 
 for(i in 1:length(true_value_high_ac)) {
   true_value_high_ac[[i]] <- dplyr::filter(true_value_high_ac[[i]], 
@@ -164,36 +163,13 @@ deviation_high_ac <- bind_rows(sampling_high_ac) %>%
                           "metric" = "metric")) %>%
   dplyr::mutate(inside_ci = dplyr::case_when(lo < value & value < hi ~ 1, 
                                              lo > value | hi < value ~ 0), 
-                inside_ci = dplyr::case_when(is.na(inside_ci) ~ 0, 
-                                             !is.na(inside_ci) ~ inside_ci)) %>% 
+                deviation_rel = (mean - value) / value) %>% 
   dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
-                   by = "metric") %>% 
-  dplyr::group_by(simulation_id, level, class, type) %>% 
-  dplyr::summarise(n = n(), 
-                   correct = mean(inside_ci, na.rm = TRUE), 
-                   false = 1 - correct)
+                   by = "metric")
 
-rm(sampling_high_ac, true_value_high_ac)
-
-#### 4. Save Results ####
-
-overwrite <- FALSE
-
-# Low AC
-UtilityFunctions::save_rds(object = deviation_low_ac, 
-                           filename = "deviation_low_ac.rds", 
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
-
-# Medium AC
-UtilityFunctions::save_rds(object = deviation_medium_ac, 
-                           filename = "deviation_medium_ac.rds", 
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
-
-# High AC
 UtilityFunctions::save_rds(object = deviation_high_ac, 
-                           filename = "deviation_high_ac.rds", 
+                           filename = "deviation_high_ac_25.rds", 
                            path = paste0(getwd(), "/3_Output"),
                            overwrite = overwrite)
 
+# rm(sampling_high_ac, true_value_high_ac)

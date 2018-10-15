@@ -40,9 +40,10 @@ for(i in 1:length(sampling_low_ac)) {
 deviation_low_ac <- bind_rows(sampling_low_ac) %>% 
   unnest(metrics) %>%
   dplyr::group_by(simulation_id, landscape_id, level, class, metric) %>%
-  dplyr::summarise(mean = mean(value, na.rm = TRUE),
+  dplyr::summarise(n = n(),
+                   mean = mean(value, na.rm = TRUE),
                    sd = sd(value, na.rm = TRUE),
-                   ci = 1.96 *  (sd / sqrt(n())),
+                   ci = 1.96 *  (sd / sqrt(n)),
                    lo = mean - ci,
                    hi = mean + ci) %>%
   dplyr::left_join(true_value_low_ac, 

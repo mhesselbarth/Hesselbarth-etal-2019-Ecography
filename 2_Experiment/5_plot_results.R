@@ -62,5 +62,5 @@ ggplot(data = deviation_low_ac_landscape_sorted,
                                     " < 100"
                                   )) + 
   labs(x = "Landscape metrics", y = "Sample scheme") + 
-  hrbrthemes::theme_ipsum(axis_title_size = 14)
+  theme_ipsum(axis_title_size = 14)
 

@@ -30,7 +30,7 @@ size <- c(2500, 7500, 20000) # plot size
 n <- c(1, 2, 3) # number of plots
 shape <- c("circle", "square", "rectangle") # plot shape
 type <- c("random", "regular") # sample desing
-simulation_run <- seq(5, 250, 5)
+simulation_run <- seq(5, 125, 5)
 
 simulation_design <- tibble::as.tibble(expand.grid(size = size, 
                                                    n = n, 

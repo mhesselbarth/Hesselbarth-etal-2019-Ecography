@@ -19,48 +19,15 @@ deviation_medium_ac <- read_rds(paste0(getwd(),
 deviation_high_ac <- read_rds(paste0(getwd(), 
                                      "/3_Output/deviation_high_ac.rds"))
 
-#### 3. Landscape level ####
+#### 3. Plot results ####
 
-deviation_low_ac_landscape <- dplyr::filter(deviation_medium_ac, level == "landscape") %>% 
-  dplyr::left_join(unique(simulation_design[, -5]), 
-                   by = c("simulation_id" = "id"), 
-                   suffix = c(".dev", ".scheme"))
+# Low AC
+plot_heatmap(deviation_low_ac, simulation_design)
 
 
-deviation_low_ac_landscape_sorted <- tidyr::unite(deviation_low_ac_landscape, 
-                                                  unique_label, 
-                                                  n.scheme, size, shape, type.scheme,
-                                                  remove = FALSE) %>% 
-  dplyr::arrange(type.scheme, shape, size, n.scheme) %>% 
-  dplyr::mutate(correct_bins = findInterval(correct,
-                                            seq(0,1, by = 0.1),
-                                            rightmost.closed = TRUE))
-
-deviation_low_ac_landscape_sorted$unique_id <- 1:nrow(deviation_low_ac_landscape_sorted)
-deviation_low_ac_landscape_sorted$unique_label <- factor(deviation_low_ac_landscape_sorted$unique_label, 
-                                                         levels = unique(deviation_low_ac_landscape_sorted$unique_label))
+# Medium AC
+plot_heatmap(deviation_medium_ac, simulation_design)
 
 
-# WRONG SAMPLING SCHEMES! 
-ggplot(data = deviation_low_ac_landscape_sorted, 
-       aes(x = type.dev,
-           y = unique_label)) +
-  geom_tile(aes(fill = factor(correct_bins))) + 
-  scale_fill_brewer(name = "% Correct \nestimation",
-                    type = "div",
-                    palette = "Spectral",
-                                  labels = c(
-                                    " < 10",
-                                    " < 20",
-                                    " < 30",
-                                    " < 40",
-                                    " < 50",
-                                    " < 60",
-                                    " < 70",
-                                    " < 80",
-                                    " < 90",
-                                    " < 100"
-                                  )) + 
-  labs(x = "Landscape metrics", y = "Sample scheme") + 
-  theme_ipsum(axis_title_size = 14)
-
+# High AC
+plot_heatmap(deviation_high_ac, simulation_design)

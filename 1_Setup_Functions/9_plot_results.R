@@ -1,3 +1,8 @@
+#### Functions to plot results ####
+
+
+
+# Heatmap of every sampling scheme for the 6 groups of LSM (Fig. x in the manuscript)
 
 plot_heatmap <- function(results, simulation_design){
   
@@ -27,9 +32,7 @@ plot_heatmap <- function(results, simulation_design){
   results_sorted$unique_id <- 1:nrow(results_sorted)
   results_sorted$unique_label <- factor(results_sorted$unique_label, 
                                         levels = unique(results_sorted$unique_label))
-  
-  
-  # WRONG SAMPLING SCHEMES! 
+
   ggplot(data = results_sorted, 
          aes(x = type.dev,
              y = unique_label)) +

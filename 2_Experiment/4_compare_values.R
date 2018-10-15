@@ -7,7 +7,7 @@ absolute_metrics <- c("ca", "ndca", "np", "pafrac", "pr", "ta", "tca", "te")
 
 simulation_design$id <- rep(1:(nrow(simulation_design) / 25), times = 25)
 
-overwrite <- TRUE
+overwrite <- FALSE
 
 #### 1. Low AC ####
 
@@ -50,7 +50,7 @@ deviation_low_ac <- bind_rows(sampling_low_ac) %>%
                           "level" = "level",
                           "class" = "class",
                           "metric" = "metric")) %>%
-  dplyr::mutate(inside_ci = dplyr::case_when(lo < value & value < hi ~ 1, 
+  dplyr::mutate(inside_ci = dplyr::case_when(lo <= value & value <= hi ~ 1, 
                                              lo > value | hi < value ~ 0), 
                 deviation_rel = (mean - value) / value) %>% 
   dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
@@ -105,7 +105,7 @@ deviation_medium_ac <- bind_rows(sampling_medium_ac) %>%
                           "level" = "level",
                           "class" = "class",
                           "metric" = "metric")) %>%
-  dplyr::mutate(inside_ci = dplyr::case_when(lo < value & value < hi ~ 1, 
+  dplyr::mutate(inside_ci = dplyr::case_when(lo <= value & value <= hi ~ 1, 
                                              lo > value | hi < value ~ 0), 
                 deviation_rel = (mean - value) / value) %>% 
   dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
@@ -161,7 +161,7 @@ deviation_high_ac <- bind_rows(sampling_high_ac) %>%
                           "level" = "level",
                           "class" = "class",
                           "metric" = "metric")) %>%
-  dplyr::mutate(inside_ci = dplyr::case_when(lo < value & value < hi ~ 1, 
+  dplyr::mutate(inside_ci = dplyr::case_when(lo <= value & value <= hi ~ 1, 
                                              lo > value | hi < value ~ 0), 
                 deviation_rel = (mean - value) / value) %>% 
   dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 

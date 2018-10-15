@@ -19,7 +19,8 @@ packages <- c(
   "raster",
   "readr",
   "sp", 
-  "tidyr"
+  "tidyr",
+  "hrbrthemes"
   )
 
 check.packages(packages)

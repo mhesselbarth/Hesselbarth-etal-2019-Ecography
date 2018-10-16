@@ -49,8 +49,7 @@ deviation_low_ac <- bind_rows(sampling_low_ac) %>%
                           "class" = "class",
                           "metric" = "metric")) %>%
   dplyr::mutate(inside_ci = dplyr::case_when(lo <= value & value <= hi ~ 1, 
-                                             lo > value | hi < value ~ 0, 
-                                             is.nan(sd) ~ 0), 
+                                             lo > value | hi < value ~ 0), 
                 deviation_rel = (mean - value) / value) %>% 
   dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
                    by = "metric")
@@ -103,8 +102,7 @@ deviation_medium_ac <- bind_rows(sampling_medium_ac) %>%
                           "class" = "class",
                           "metric" = "metric")) %>%
   dplyr::mutate(inside_ci = dplyr::case_when(lo <= value & value <= hi ~ 1, 
-                                             lo > value | hi < value ~ 0,
-                                             is.nan(sd) ~ 0),
+                                             lo > value | hi < value ~ 0),
                 deviation_rel = (mean - value) / value) %>% 
   dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
                    by = "metric")
@@ -157,8 +155,7 @@ deviation_high_ac <- bind_rows(sampling_high_ac) %>%
                           "class" = "class",
                           "metric" = "metric")) %>%
   dplyr::mutate(inside_ci = dplyr::case_when(lo <= value & value <= hi ~ 1, 
-                                             lo > value | hi < value ~ 0,
-                                             is.nan(sd) ~ 0),
+                                             lo > value | hi < value ~ 0),
                 deviation_rel = (mean - value) / value) %>% 
   dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
                    by = "metric")

@@ -208,10 +208,10 @@ results_landscape$unique_label <- factor(results_landscape$unique_label,
 
 # Hypothesis 1
 results_landscape %>% 
-  dplyr::group_by(size, n.scheme, autocorrelation) %>%
+  dplyr::group_by(size, n.scheme, autocorrelation, type.lsm) %>%
   dplyr::summarise(correct = mean(correct), 
                    false = mean(false)) %>% 
-  dplyr::arrange(autocorrelation, size, n.scheme)
+  dplyr::arrange(autocorrelation, type.lsm, size, n.scheme)
 
 hypothesis_1 <- aov(results_landscape$correct ~ as.factor(results_landscape$percentage))
 summary(hypothesis_1)
@@ -219,11 +219,11 @@ TukeyHSD(hypothesis_1)
 
 # Hypothesis 2
 results_landscape %>% 
-  dplyr::group_by(shape, autocorrelation) %>% 
+  dplyr::group_by(shape, autocorrelation, type.lsm) %>% 
   dplyr::summarise(n = n(), 
                    correct = mean(correct), 
                    false = mean(false)) %>% 
-  dplyr::arrange(autocorrelation, shape)
+  dplyr::arrange(autocorrelation, type.lsm, shape)
 
 hypothesis_2 <- aov(results_landscape$correct ~ as.factor(results_landscape$shape))
 summary(hypothesis_2)
@@ -231,11 +231,11 @@ TukeyHSD(hypothesis_2)
 
 # Hypothesis 3
 results_landscape %>% 
-  dplyr::group_by(type.scheme, autocorrelation) %>% 
+  dplyr::group_by(type.scheme, autocorrelation, type.lsm) %>% 
   dplyr::summarise(n = n(), 
                    correct = mean(correct), 
                    false = mean(false)) %>% 
-  dplyr::arrange(autocorrelation, type.scheme)
+  dplyr::arrange(autocorrelation, type.lsm,  type.scheme)
 
 random <- dplyr::filter(results_landscape, type.scheme == "random") %>% dplyr::pull(correct)
 regular <- dplyr::filter(results_landscape, type.scheme == "regular") %>% dplyr::pull(correct)

@@ -47,16 +47,12 @@ deviation_low_ac <- bind_rows(sampling_low_ac) %>%
   dplyr::summarise(n = n(),
                    value_true = unique(value_true),
                    estimate = mean(value_sample, na.rm = TRUE),
-                   var = var(value_sample, na.rm = TRUE), 
-                   min = min(value_sample, na.rm = TRUE), 
-                   max = max(value_sample, na.rm = TRUE)) %>% 
+                   var = var(value_sample, na.rm = TRUE)) %>% 
   dplyr::mutate(bias = (estimate - value_true) ^ 2, 
                 mse = var + bias, 
                 rmse = sqrt(mse), 
-                mse_rel_mean = mse / estimate, 
-                rmse_rel_mean = rmse / estimate, 
-                mse_rel_minmax = mse / (max - min), 
-                rmse_rel_minmax = rmse / (max - min))
+                nmse = mse / estimate, 
+                nrmse = rmse / estimate)
 
 UtilityFunctions::save_rds(object = deviation_low_ac, 
                            filename = "deviation_low_ac_50.rds", 
@@ -104,16 +100,12 @@ deviation_medium_ac <- bind_rows(sampling_medium_ac) %>%
   dplyr::summarise(n = n(),
                    value_true = unique(value_true),
                    estimate = mean(value_sample, na.rm = TRUE),
-                   var = var(value_sample, na.rm = TRUE), 
-                   min = min(value_sample, na.rm = TRUE), 
-                   max = max(value_sample, na.rm = TRUE)) %>% 
+                   var = var(value_sample, na.rm = TRUE)) %>% 
   dplyr::mutate(bias = (estimate - value_true) ^ 2, 
                 mse = var + bias, 
                 rmse = sqrt(mse), 
-                mse_rel_mean = mse / estimate, 
-                rmse_rel_mean = rmse / estimate, 
-                mse_rel_minmax = mse / (max - min), 
-                rmse_rel_minmax = rmse / (max - min))
+                nmse = mse / estimate, 
+                nrmse = rmse / estimate)
 
 UtilityFunctions::save_rds(object = deviation_medium_ac, 
                            filename = "deviation_medium_ac_50.rds", 
@@ -161,16 +153,12 @@ deviation_high_ac <- bind_rows(sampling_high_ac) %>%
   dplyr::summarise(n = n(),
                    value_true = unique(value_true),
                    estimate = mean(value_sample, na.rm = TRUE),
-                   var = var(value_sample, na.rm = TRUE), 
-                   min = min(value_sample, na.rm = TRUE), 
-                   max = max(value_sample, na.rm = TRUE)) %>% 
+                   var = var(value_sample, na.rm = TRUE)) %>% 
   dplyr::mutate(bias = (estimate - value_true) ^ 2, 
                 mse = var + bias, 
                 rmse = sqrt(mse), 
-                mse_rel_mean = mse / estimate, 
-                rmse_rel_mean = rmse / estimate, 
-                mse_rel_minmax = mse / (max - min), 
-                rmse_rel_minmax = rmse / (max - min))
+                nmse = mse / estimate, 
+                nrmse = rmse / estimate)
 
 UtilityFunctions::save_rds(object = deviation_high_ac, 
                            filename = "deviation_high_ac_50.rds", 

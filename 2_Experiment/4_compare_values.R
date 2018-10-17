@@ -36,23 +36,27 @@ for(i in 1:length(sampling_low_ac)) {
 }
 
 deviation_low_ac <- bind_rows(sampling_low_ac) %>%
-  dplyr::group_by(simulation_id, landscape_id, level, class, metric) %>%
-  dplyr::summarise(n = n(),
-                   mean = mean(value, na.rm = TRUE),
-                   sd = sd(value, na.rm = TRUE),
-                   ci = 1.96 *  (sd / sqrt(n)),
-                   lo = mean - ci,
-                   hi = mean + ci) %>%
   dplyr::left_join(true_value_low_ac, 
                    by = c("landscape_id" = "layer", 
                           "level" = "level",
                           "class" = "class",
-                          "metric" = "metric")) %>%
-  dplyr::mutate(inside_ci = dplyr::case_when(lo <= value & hi >= value ~ 1, 
-                                             lo > value | hi < value ~ 0), 
-                deviation_rel = (mean - value) / value) %>% 
-  dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
-                   by = "metric")
+                          "id" = "id",
+                          "metric" = "metric"), 
+                   suffix = c("_sample", "_true")) %>%
+  dplyr::group_by(simulation_id, landscape_id, level, class, metric) %>%
+  dplyr::summarise(n = n(),
+                   value_true = unique(value_true),
+                   estimate = mean(value_sample, na.rm = TRUE),
+                   var = var(value_sample, na.rm = TRUE), 
+                   min = min(value_sample, na.rm = TRUE), 
+                   max = max(value_sample, na.rm = TRUE)) %>% 
+  dplyr::mutate(bias = (estimate - value_true) ^ 2, 
+                mse = var + bias, 
+                rmse = sqrt(mse), 
+                mse_rel_mean = mse / estimate, 
+                rmse_rel_mean = rmse / estimate, 
+                mse_rel_minmax = mse / (max - min), 
+                rmse_rel_minmax = rmse / (max - min))
 
 UtilityFunctions::save_rds(object = deviation_low_ac, 
                            filename = "deviation_low_ac_50.rds", 
@@ -89,23 +93,27 @@ for(i in 1:length(sampling_medium_ac)) {
 }
 
 deviation_medium_ac <- bind_rows(sampling_medium_ac) %>%
-  dplyr::group_by(simulation_id, landscape_id, level, class, metric) %>%
-  dplyr::summarise(n = n(),
-                   mean = mean(value, na.rm = TRUE),
-                   sd = sd(value, na.rm = TRUE),
-                   ci = 1.96 *  (sd / sqrt(n)),
-                   lo = mean - ci,
-                   hi = mean + ci) %>%
   dplyr::left_join(true_value_medium_ac, 
                    by = c("landscape_id" = "layer", 
                           "level" = "level",
                           "class" = "class",
-                          "metric" = "metric")) %>%
-  dplyr::mutate(inside_ci = dplyr::case_when(lo <= value & hi >= value ~ 1, 
-                                             lo > value | hi < value ~ 0), 
-                deviation_rel = (mean - value) / value) %>% 
-  dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
-                   by = "metric")
+                          "id" = "id",
+                          "metric" = "metric"), 
+                   suffix = c("_sample", "_true")) %>%
+  dplyr::group_by(simulation_id, landscape_id, level, class, metric) %>%
+  dplyr::summarise(n = n(),
+                   value_true = unique(value_true),
+                   estimate = mean(value_sample, na.rm = TRUE),
+                   var = var(value_sample, na.rm = TRUE), 
+                   min = min(value_sample, na.rm = TRUE), 
+                   max = max(value_sample, na.rm = TRUE)) %>% 
+  dplyr::mutate(bias = (estimate - value_true) ^ 2, 
+                mse = var + bias, 
+                rmse = sqrt(mse), 
+                mse_rel_mean = mse / estimate, 
+                rmse_rel_mean = rmse / estimate, 
+                mse_rel_minmax = mse / (max - min), 
+                rmse_rel_minmax = rmse / (max - min))
 
 UtilityFunctions::save_rds(object = deviation_medium_ac, 
                            filename = "deviation_medium_ac_50.rds", 
@@ -142,23 +150,27 @@ for(i in 1:length(sampling_high_ac)) {
 }
 
 deviation_high_ac <- bind_rows(sampling_high_ac) %>%
-  dplyr::group_by(simulation_id, landscape_id, level, class, metric) %>%
-  dplyr::summarise(n = n(),
-                   mean = mean(value, na.rm = TRUE),
-                   sd = sd(value, na.rm = TRUE),
-                   ci = 1.96 *  (sd / sqrt(n)),
-                   lo = mean - ci,
-                   hi = mean + ci) %>%
   dplyr::left_join(true_value_high_ac, 
                    by = c("landscape_id" = "layer", 
                           "level" = "level",
                           "class" = "class",
-                          "metric" = "metric")) %>%
-  dplyr::mutate(inside_ci = dplyr::case_when(lo <= value & hi >= value ~ 1, 
-                                             lo > value | hi < value ~ 0), 
-                deviation_rel = (mean - value) / value) %>% 
-  dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
-                   by = "metric")
+                          "id" = "id",
+                          "metric" = "metric"), 
+                   suffix = c("_sample", "_true")) %>%
+  dplyr::group_by(simulation_id, landscape_id, level, class, metric) %>%
+  dplyr::summarise(n = n(),
+                   value_true = unique(value_true),
+                   estimate = mean(value_sample, na.rm = TRUE),
+                   var = var(value_sample, na.rm = TRUE), 
+                   min = min(value_sample, na.rm = TRUE), 
+                   max = max(value_sample, na.rm = TRUE)) %>% 
+  dplyr::mutate(bias = (estimate - value_true) ^ 2, 
+                mse = var + bias, 
+                rmse = sqrt(mse), 
+                mse_rel_mean = mse / estimate, 
+                rmse_rel_mean = rmse / estimate, 
+                mse_rel_minmax = mse / (max - min), 
+                rmse_rel_minmax = rmse / (max - min))
 
 UtilityFunctions::save_rds(object = deviation_high_ac, 
                            filename = "deviation_high_ac_50.rds", 

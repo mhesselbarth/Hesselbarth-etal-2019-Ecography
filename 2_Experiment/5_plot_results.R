@@ -27,7 +27,8 @@ deviation_high_ac <- read_rds(paste0(getwd(),
 
 deviation_high_ac$autocorrelation <- "high"
 
-#### 3. Summarised by metrics ####
+
+# Create one full dataset
 deviation_complete_ac <- dplyr::bind_rows(deviation_low_ac, deviation_medium_ac, deviation_high_ac)
 deviation_complete_ac$autocorrelation <- factor(deviation_complete_ac$autocorrelation, levels=c('low','medium','high'))
 
@@ -50,30 +51,33 @@ deviation_joined <- dplyr::mutate(deviation_joined,
                                                                 size == 20000 & n_scheme == 5 ~ 35,
                                                                 size == 20000 & n_scheme == 10 ~ 75))
 
+deviation_joined <- dplyr::filter(deviation_joined, level == "landscape")
+
+#### 3. Summarised by metrics ####
 deviation_summarised <- dplyr::group_by(deviation_joined, 
                                         autocorrelation, percentage, shape, type_scheme, level, class, metric) %>%
-  dplyr::summarise(mse_rel_mean  = mean(mse_rel_mean, na.rm = TRUE), 
-                   mse_rel_minmax = mean(mse_rel_minmax, na.rm = TRUE), 
-                   rmse_rel_mean  = mean(rmse_rel_mean, na.rm = TRUE), 
-                   rmse_rel_minmax = mean(rmse_rel_minmax, na.rm = TRUE), 
+  dplyr::summarise(mse_mean  = mean(mse, na.rm = TRUE), 
+                   nmse_mean = mean(nmse, na.rm = TRUE), 
+                   rmse_mean  = mean(rmse, na.rm = TRUE), 
+                   nrmse_mean = mean(nrmse, na.rm = TRUE), 
                    type_lsm = unique(type_lsm))
 
-results_landscape <- dplyr::filter(deviation_summarised, level == "landscape") %>%
-  tidyr::unite(unique_label,
+results <- tidyr::unite(deviation_summarised, 
+               unique_label,
                percentage, shape, type_scheme,
                remove = FALSE) %>% 
   dplyr::arrange(type_scheme, shape, percentage)
 
-results_landscape$unique_label <- factor(results_landscape$unique_label, 
-                                         levels = unique(results_landscape$unique_label))
+results$unique_label <- factor(results$unique_label, 
+                               levels = unique(results$unique_label))
 
-ggplot_metrics <- ggplot(data = results_landscape, 
+ggplot_metrics <- ggplot(data = results, 
                          aes(x = metric, y = unique_label)) +
-  geom_tile(aes(fill = rmse_rel_mean)) + 
+  geom_tile(aes(fill = nrmse_mean)) + 
   facet_wrap(~ autocorrelation + type_lsm, 
              scales = "free_x", 
              ncol = 6, nrow = 3) +
-  scale_fill_viridis_c() + 
+  scale_fill_viridis_c(name = "normalized RMSE") + 
   labs(x = "Landscape metrics", y = "Sample scheme") + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ 
   # theme_ipsum(axis_title_size = 14)
@@ -85,49 +89,27 @@ UtilityFunctions::save_ggplot(ggplot_metrics,
                               width = 50, height = 25, units = "cm")
 
 #### 4. Summarised by type ####
-deviation_complete_ac <- dplyr::bind_rows(deviation_low_ac, deviation_medium_ac, deviation_high_ac)
-deviation_complete_ac$autocorrelation <- factor(deviation_complete_ac$autocorrelation, levels=c('low','medium','high'))
-
-deviation_joined <- dplyr::filter(deviation_complete_ac, level == "landscape") %>% 
-  dplyr::left_join(unique(simulation_design[, -5]), 
-                   by = c("simulation_id" = "id"), 
-                   suffix = c("_deviation", "_scheme")) %>% 
-  dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
-                 by = "metric", 
-                 suffix = c("_scheme", "_lsm"))
-
-deviation_joined <- dplyr::mutate(deviation_joined, 
-                                  percentage = dplyr::case_when(size ==  2500 & n_scheme == 10 ~ 10,
-                                                                size ==  2500 & n_scheme == 35 ~ 35,
-                                                                size ==  2500 & n_scheme == 75 ~ 75,
-                                                                size ==  7500 & n_scheme == 4 ~ 10,
-                                                                size ==  7500 & n_scheme == 12 ~ 35,
-                                                                size ==  7500 & n_scheme == 25 ~ 75, 
-                                                                size == 20000 & n_scheme == 2 ~ 10,
-                                                                size == 20000 & n_scheme == 5 ~ 35,
-                                                                size == 20000 & n_scheme == 10 ~ 75))
-
 deviation_summarised <- dplyr::group_by(deviation_joined, 
                                         autocorrelation, percentage, shape, type_scheme, level, class, type_lsm) %>%
-  dplyr::summarise(mse_rel_mean  = mean(mse_rel_mean, na.rm = TRUE), 
-                   mse_rel_minmax = mean(mse_rel_minmax, na.rm = TRUE), 
-                   rmse_rel_mean  = mean(rmse_rel_mean, na.rm = TRUE), 
-                   rmse_rel_minmax = mean(rmse_rel_minmax, na.rm = TRUE))
+  dplyr::summarise(mse_mean  = mean(mse, na.rm = TRUE), 
+                   nmse_mean = mean(nmse, na.rm = TRUE), 
+                   rmse_mean  = mean(rmse, na.rm = TRUE), 
+                   nrmse_mean = mean(nrmse, na.rm = TRUE))
 
-results_landscape <- dplyr::filter(deviation_summarised, level == "landscape") %>%
-  tidyr::unite(unique_label,
-               percentage, shape, type_scheme,
-               remove = FALSE) %>% 
+results <- tidyr::unite(deviation_summarised, 
+                        unique_label,
+                        percentage, shape, type_scheme,
+                        remove = FALSE) %>% 
   dplyr::arrange(type_scheme, shape, percentage)
 
-results_landscape$unique_label <- factor(results_landscape$unique_label, 
-                                         levels = unique(results_landscape$unique_label))
+results$unique_label <- factor(results$unique_label, 
+                               levels = unique(results$unique_label))
 
-ggplot_type <- ggplot(data = results_landscape, 
+ggplot_type <- ggplot(data = results, 
                       aes(x = type_lsm, y = unique_label)) +
-  geom_tile(aes(fill = rmse_rel_mean)) + 
+  geom_tile(aes(fill = nrmse_mean)) + 
   facet_wrap(~ autocorrelation) +
-  scale_fill_brewer(palette = ) +
+  scale_fill_viridis_c(name = "normalized RMSE") + 
   labs(x = "Landscape metrics", y = "Sample scheme") + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ 
   # theme_ipsum(axis_title_size = 14)
@@ -140,70 +122,101 @@ UtilityFunctions::save_ggplot(ggplot_type,
 
 
 #### 5. Hypotheses ####
-deviation_complete_ac <- dplyr::bind_rows(deviation_low_ac, deviation_medium_ac, deviation_high_ac)
-deviation_complete_ac$autocorrelation <- factor(deviation_complete_ac$autocorrelation, levels=c('low','medium','high'))
 
-deviation_joined <- dplyr::filter(deviation_complete_ac, level == "landscape") %>% 
-  dplyr::left_join(unique(simulation_design[, -5]), 
-                   by = c("simulation_id" = "id"), 
-                   suffix = c("_deviation", "_scheme")) %>% 
-  dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
-                   by = "metric", 
-                   suffix = c("_scheme", "_lsm"))
-
-deviation_joined <- dplyr::mutate(deviation_joined, 
-                                  percentage = dplyr::case_when(size ==  2500 & n_scheme == 10 ~ 10,
-                                                                size ==  2500 & n_scheme == 35 ~ 35,
-                                                                size ==  2500 & n_scheme == 75 ~ 75,
-                                                                size ==  7500 & n_scheme == 4 ~ 10,
-                                                                size ==  7500 & n_scheme == 12 ~ 35,
-                                                                size ==  7500 & n_scheme == 25 ~ 75, 
-                                                                size == 20000 & n_scheme == 2 ~ 10,
-                                                                size == 20000 & n_scheme == 5 ~ 35,
-                                                                size == 20000 & n_scheme == 10 ~ 75))
-
-deviation_summarised <- dplyr::group_by(deviation_joined, 
-                                        autocorrelation, percentage, shape, type_scheme, level, class, type_lsm) %>%
-  dplyr::summarise(mse_rel = mean(mse_rel, na.rm = TRUE), 
-                   rmse_rel = mean(rmse_rel, na.rm = TRUE))
-
-results_landscape <- dplyr::filter(deviation_summarised, level == "landscape") %>%
-  tidyr::unite(unique_label,
-               percentage, shape, type_scheme,
-               remove = FALSE) %>% 
-  dplyr::arrange(type_scheme, shape, percentage)
-
-results_landscape$unique_label <- factor(results_landscape$unique_label, 
-                                         levels = unique(results_landscape$unique_label))
+deviation_cleaned <- dplyr::filter(deviation_joined, is.finite(nrmse))
 
 # Hypothesis 1
-hypothesis_1_summarised <- results_landscape %>% 
-  dplyr::group_by(autocorrelation, type_lsm, percentage) %>%
-  dplyr::summarise(mse_rel = mean(mse_rel), 
-                   rmse_rel = mean(rmse_rel))
+hypothesis_1_summarised <- dplyr::group_by(deviation_joined, 
+                                           autocorrelation, type_lsm, percentage)  %>%
+  dplyr::summarise(mean = mean(nrmse, na.rm = TRUE), 
+                   median = median(nrmse, na.rm = TRUE),
+                   lower = quantile(nrmse, probs = 0.35, na.rm = TRUE), 
+                   upper = quantile(nrmse, probs = 0.65, na.rm = TRUE), 
+                   min = quantile(nrmse, probs = 0.3, na.rm = TRUE), 
+                   max = quantile(nrmse, probs = 0.7, na.rm = TRUE))
 
-hypothesis_1 <- aov(results_landscape$correct ~ as.factor(results_landscape$percentage))
+ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
+  geom_boxplot(aes(x = as.factor(percentage), 
+                   lower = lower,
+                   upper = upper, 
+                   middle = median, 
+                   ymin = min, 
+                   ymax = max), 
+               stat = "identity") + 
+  facet_wrap(~ autocorrelation + type_lsm, scales = "free_y", 
+             ncol = 6, nrow = 3) +
+  labs(x = "% sampled landscape", y = "nRMSE")
+
+hypothesis_1 <- aov(deviation_cleaned$nrmse ~ factor(deviation_cleaned$percentage))
 summary(hypothesis_1)
 TukeyHSD(hypothesis_1)
 
-# Hypothesis 2
-hypothesis_2_summarised <- results_landscape %>% 
-  dplyr::group_by(autocorrelation, type_lsm, shape) %>%
-  dplyr::summarise(mse_rel = mean(mse_rel), 
-                   rmse_rel = mean(rmse_rel))
+UtilityFunctions::save_ggplot(ggplot_hypothesis_1, 
+                              filename = "ggplot_hypothesis_1.png", 
+                              path = paste0(getwd(), "/4_Plots"), 
+                              overwrite = overwrite, 
+                              width = 50, height = 25, units = "cm")
 
-hypothesis_2 <- aov(results_landscape$correct ~ as.factor(results_landscape$shape))
+# Hypothesis 2
+hypothesis_2_summarised <- dplyr::group_by(deviation_joined, 
+                                           autocorrelation, type_lsm, shape)  %>%
+  dplyr::summarise(mean = mean(nrmse, na.rm = TRUE), 
+                   median = median(nrmse, na.rm = TRUE),
+                   lower = quantile(nrmse, probs = 0.35, na.rm = TRUE), 
+                   upper = quantile(nrmse, probs = 0.65, na.rm = TRUE), 
+                   min = quantile(nrmse, probs = 0.3, na.rm = TRUE), 
+                   max = quantile(nrmse, probs = 0.7, na.rm = TRUE))
+
+ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
+  geom_boxplot(aes(x = factor(shape, levels = c("rectangle", "square", "circle")), 
+                   lower = lower,
+                   upper = upper, 
+                   middle = median, 
+                   ymin = min, 
+                   ymax = max), 
+               stat = "identity") + 
+  facet_wrap(~ autocorrelation + type_lsm, scales = "free_y", 
+             ncol = 6, nrow = 3) +
+  labs(x = "Plot shape", y = "nRMSE") 
+
+hypothesis_2 <- aov(deviation_cleaned$nrmse ~ factor(deviation_cleaned$shape))
 summary(hypothesis_2)
 TukeyHSD(hypothesis_2)
 
+UtilityFunctions::save_ggplot(ggplot_hypothesis_2, 
+                              filename = "ggplot_hypothesis_2.png", 
+                              path = paste0(getwd(), "/4_Plots"), 
+                              overwrite = overwrite, 
+                              width = 50, height = 25, units = "cm")
+
 # Hypothesis 3
-hypothesis_3_summarised <- results_landscape %>% 
-  dplyr::group_by(autocorrelation,type_lsm, type_scheme)%>%
-  dplyr::summarise(mse_rel = mean(mse_rel), 
-                   rmse_rel = mean(rmse_rel))
+hypothesis_3_summarised <- dplyr::group_by(deviation_joined, 
+                                           autocorrelation, type_lsm, type_scheme)  %>%
+  dplyr::summarise(mean = mean(nrmse, na.rm = TRUE), 
+                   median = median(nrmse, na.rm = TRUE),
+                   lower = quantile(nrmse, probs = 0.35, na.rm = TRUE), 
+                   upper = quantile(nrmse, probs = 0.65, na.rm = TRUE), 
+                   min = quantile(nrmse, probs = 0.3, na.rm = TRUE), 
+                   max = quantile(nrmse, probs = 0.7, na.rm = TRUE))
 
-random <- dplyr::filter(results_landscape, type.scheme == "random") %>% dplyr::pull(correct)
-regular <- dplyr::filter(results_landscape, type.scheme == "regular") %>% dplyr::pull(correct)
+ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
+  geom_boxplot(aes(x = factor(type_scheme, levels = c("random", "regular")), 
+                   lower = lower,
+                   upper = upper, 
+                   middle = median, 
+                   ymin = min, 
+                   ymax = max), 
+               stat = "identity") + 
+  facet_wrap(~ autocorrelation + type_lsm, scales = "free_y", 
+             ncol = 6, nrow = 3) +
+  labs(x = "Spatial arrangement plots", y = "nRMSE") 
 
-t.test(random, regular)
+t.test(deviation_cleaned$nrmse ~ factor(deviation_cleaned$type_scheme))
+
+UtilityFunctions::save_ggplot(ggplot_hypothesis_3, 
+                              filename = "ggplot_hypothesis_3.png", 
+                              path = paste0(getwd(), "/4_Plots"), 
+                              overwrite = overwrite, 
+                              width = 50, height = 25, units = "cm")
+
 

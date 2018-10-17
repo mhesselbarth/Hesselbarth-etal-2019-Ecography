@@ -74,6 +74,7 @@ results$unique_label <- factor(results$unique_label,
 ggplot_metrics <- ggplot(data = results, 
                          aes(x = metric, y = unique_label)) +
   geom_tile(aes(fill = nrmse_mean)) + 
+  geom_text(aes(label = round(nrmse_mean, 2)), col = "white", size = 2) +
   facet_wrap(~ autocorrelation + type_lsm, 
              scales = "free_x", 
              ncol = 6, nrow = 3) +
@@ -108,6 +109,7 @@ results$unique_label <- factor(results$unique_label,
 ggplot_type <- ggplot(data = results, 
                       aes(x = type_lsm, y = unique_label)) +
   geom_tile(aes(fill = nrmse_mean)) + 
+  geom_text(aes(label = round(nrmse_mean, 2)), col = "white", size = 2) +
   facet_wrap(~ autocorrelation) +
   scale_fill_viridis_c(name = "normalized RMSE") + 
   labs(x = "Landscape metrics", y = "Sample scheme") + 

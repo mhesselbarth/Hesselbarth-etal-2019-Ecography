@@ -47,7 +47,7 @@ deviation_low_ac <- bind_rows(sampling_low_ac) %>%
   dplyr::summarise(n = n(),
                    value_true = unique(value_true),
                    estimate = mean(value_sample, na.rm = TRUE),
-                   var = var(value_sample, na.rm = TRUE)) %>% 
+                   var = var(value_sample, na.rm = TRUE) / (n - 1)) %>% 
   dplyr::mutate(bias = estimate - value_true, 
                 mse = var + (bias ^ 2), 
                 rmse = sqrt(mse), 
@@ -99,7 +99,7 @@ deviation_medium_ac <- bind_rows(sampling_medium_ac) %>%
   dplyr::summarise(n = n(),
                    value_true = unique(value_true),
                    estimate = mean(value_sample, na.rm = TRUE),
-                   var = var(value_sample, na.rm = TRUE)) %>% 
+                   var = var(value_sample, na.rm = TRUE) / (n - 1)) %>% 
   dplyr::mutate(bias = estimate - value_true, 
                 mse = var + (bias ^ 2), 
                 rmse = sqrt(mse), 
@@ -151,7 +151,7 @@ deviation_high_ac <- bind_rows(sampling_high_ac) %>%
   dplyr::summarise(n = n(),
                    value_true = unique(value_true),
                    estimate = mean(value_sample, na.rm = TRUE),
-                   var = var(value_sample, na.rm = TRUE)) %>% 
+                   var = var(value_sample, na.rm = TRUE) / (n - 1)) %>% 
   dplyr::mutate(bias = estimate - value_true, 
                 mse = var + (bias ^ 2), 
                 rmse = sqrt(mse), 

@@ -134,17 +134,12 @@ ggplot_type <- ggplot(data = results,
   facet_wrap(~ autocorrelation, ncol = 1) +
   scale_fill_viridis_c(name = "nRMSE [%]") + 
   labs(x = "Landscape metrics", y = "Sample scheme") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # +
-  # theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
+  theme_light() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.border = element_blank()) 
 
 # ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
 # ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
-
-UtilityFunctions::save_ggplot(ggplot_type,
-                              filename = "ggplot_type.png",
-                              path = paste0(getwd(), "/4_Plots"),
-                              overwrite = overwrite,
-                              width = 50, height = 25, units = "cm")
 
 #### 5. Hypotheses ####
 deviation_cleaned <- dplyr::filter(deviation_cleaned, is.finite(nrmse))
@@ -221,17 +216,11 @@ ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
   labs(x = "Spatial arrangement plots", y = "nRMSE [%]") # +
   # theme_ipsum(axis_title_size = 14)
 
-ggplot_hypothesis_complete <- ggplot_hypothesis_1 +
+ggplot_hypothesis_1 +
   ggplot_hypothesis_2 +
   ggplot_hypothesis_3 +
-  plot_layout(ncol = 1)
-
-UtilityFunctions::save_ggplot(ggplot_hypothesis_complete,
-                              filename = "ggplot_hypothesis_complete.png",
-                              path = paste0(getwd(), "/4_Plots"),
-                              overwrite = overwrite,
-                              width = 50, height = 25, units = "cm")
-
+  plot_layout(ncol = 1) +
+  patchwork::plot_annotation(tag_levels = "a", tag_suffix = ")")
 
 ggsave("4_Plots/ggplot_hypotheses.png", width = 12, height = 20)
 ggsave("4_Plots/ggplot_hypotheses.eps", width = 14, height = 20)

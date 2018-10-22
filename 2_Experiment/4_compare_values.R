@@ -48,10 +48,9 @@ deviation_low_ac <- bind_rows(sampling_low_ac) %>%
                    value_true = unique(value_true),
                    estimate = mean(value_sample, na.rm = TRUE),
                    var = var(value_sample, na.rm = TRUE)) %>% 
-  dplyr::mutate(bias = (estimate - value_true) ^ 2, 
-                mse = var + bias, 
+  dplyr::mutate(bias = estimate - value_true, 
+                mse = var + (bias ^ 2), 
                 rmse = sqrt(mse), 
-                nmse = mse / estimate, 
                 nrmse = rmse / estimate)
 
 UtilityFunctions::save_rds(object = deviation_low_ac, 
@@ -101,10 +100,9 @@ deviation_medium_ac <- bind_rows(sampling_medium_ac) %>%
                    value_true = unique(value_true),
                    estimate = mean(value_sample, na.rm = TRUE),
                    var = var(value_sample, na.rm = TRUE)) %>% 
-  dplyr::mutate(bias = (estimate - value_true) ^ 2, 
-                mse = var + bias, 
+  dplyr::mutate(bias = estimate - value_true, 
+                mse = var + (bias ^ 2), 
                 rmse = sqrt(mse), 
-                nmse = mse / estimate, 
                 nrmse = rmse / estimate)
 
 UtilityFunctions::save_rds(object = deviation_medium_ac, 
@@ -154,10 +152,9 @@ deviation_high_ac <- bind_rows(sampling_high_ac) %>%
                    value_true = unique(value_true),
                    estimate = mean(value_sample, na.rm = TRUE),
                    var = var(value_sample, na.rm = TRUE)) %>% 
-  dplyr::mutate(bias = (estimate - value_true) ^ 2, 
-                mse = var + bias, 
+  dplyr::mutate(bias = estimate - value_true, 
+                mse = var + (bias ^ 2), 
                 rmse = sqrt(mse), 
-                nmse = mse / estimate, 
                 nrmse = rmse / estimate)
 
 UtilityFunctions::save_rds(object = deviation_high_ac, 

@@ -5,7 +5,7 @@ purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = 
 
 simulation_design$id <- rep(1:(nrow(simulation_design) / 50), times = 50)
 
-overwrite <- FALSE
+overwrite <- TRUE
 
 #### 2. Import results #### 
 
@@ -56,10 +56,9 @@ deviation_joined <- dplyr::filter(deviation_joined, level == "landscape")
 #### 3. Summarised by metrics ####
 deviation_summarised <- dplyr::group_by(deviation_joined, 
                                         autocorrelation, percentage, shape, type_scheme, level, class, metric) %>%
-  dplyr::summarise(mse_mean  = mean(mse, na.rm = TRUE), 
-                   nmse_mean = mean(nmse, na.rm = TRUE), 
-                   rmse_mean  = mean(rmse, na.rm = TRUE), 
-                   nrmse_mean = mean(nrmse, na.rm = TRUE), 
+  dplyr::summarise(mse_mean = mean(mse, na.rm = TRUE) * 100, 
+                   rmse_mean = mean(rmse, na.rm = TRUE) * 100, 
+                   nrmse_mean = mean(nrmse, na.rm = TRUE) * 100, 
                    type_lsm = unique(type_lsm))
 
 results <- tidyr::unite(deviation_summarised, 
@@ -74,28 +73,44 @@ results$unique_label <- factor(results$unique_label,
 ggplot_metrics <- ggplot(data = results, 
                          aes(x = metric, y = unique_label)) +
   geom_tile(aes(fill = nrmse_mean)) + 
-  geom_text(aes(label = round(nrmse_mean, 2)), col = "white", size = 2) +
+  geom_text(aes(label = round(nrmse_mean, 2)), col = "black", size = 2) +
   facet_wrap(~ autocorrelation + type_lsm, 
              scales = "free_x", 
              ncol = 6, nrow = 3) +
-  scale_fill_viridis_c(name = "normalized RMSE") + 
+  scale_fill_viridis_c(name = "nRMSE [%]") + 
   labs(x = "Landscape metrics", y = "Sample scheme") + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ 
   # theme_ipsum(axis_title_size = 14)
 
-UtilityFunctions::save_ggplot(ggplot_metrics, 
-                              filename = "ggplot_metrics.png", 
-                              path = paste0(getwd(), "/4_Plots"), 
-                              overwrite = overwrite, 
-                              width = 50, height = 25, units = "cm")
+# UtilityFunctions::save_ggplot(ggplot_metrics, 
+#                               filename = "ggplot_metrics.png", 
+#                               path = paste0(getwd(), "/4_Plots"), 
+#                               overwrite = overwrite, 
+#                               width = 210, height = 297, units = "mm")
 
-#### 4. Summarised by type ####
+
+#### 4. Clean data ####
 deviation_summarised <- dplyr::group_by(deviation_joined, 
+                                        autocorrelation, percentage, shape, type_scheme, level, class, metric) %>%
+  dplyr::summarise(mse_mean = mean(mse, na.rm = TRUE) * 100, 
+                   rmse_mean = mean(rmse, na.rm = TRUE) * 100, 
+                   nrmse_mean = mean(nrmse, na.rm = TRUE) * 100, 
+                   type_lsm = unique(type_lsm))
+
+metric_list <- split(deviation_summarised, deviation_summarised$metric) %>% 
+  purrr::map(function(x) { 
+    all(x$nrmse_mean >= 125)
+}) 
+metric_list <- unique(deviation_joined$metric)[purrr::flatten_lgl(metric_list)]
+
+deviation_cleaned <- dplyr::filter(deviation_joined, !(metric %in% metric_list))
+
+#### 5. Summarised by type ####
+deviation_summarised <- dplyr::group_by(deviation_cleaned, 
                                         autocorrelation, percentage, shape, type_scheme, level, class, type_lsm) %>%
-  dplyr::summarise(mse_mean  = mean(mse, na.rm = TRUE), 
-                   nmse_mean = mean(nmse, na.rm = TRUE), 
-                   rmse_mean  = mean(rmse, na.rm = TRUE), 
-                   nrmse_mean = mean(nrmse, na.rm = TRUE))
+  dplyr::summarise(mse_mean  = mean(mse, na.rm = TRUE) * 100, 
+                   rmse_mean  = mean(rmse, na.rm = TRUE) * 100, 
+                   nrmse_mean = mean(nrmse, na.rm = TRUE) * 100)
 
 results <- tidyr::unite(deviation_summarised, 
                         unique_label,
@@ -109,35 +124,41 @@ results$unique_label <- factor(results$unique_label,
 ggplot_type <- ggplot(data = results, 
                       aes(x = type_lsm, y = unique_label)) +
   geom_tile(aes(fill = nrmse_mean)) + 
-  geom_text(aes(label = round(nrmse_mean, 2)), col = "white", size = 2) +
+  geom_text(aes(label = round(nrmse_mean, 2)), col = "black", size = 2.5) +
   facet_wrap(~ autocorrelation) +
-  scale_fill_viridis_c(name = "normalized RMSE") + 
+  scale_fill_viridis_c(name = "nRMSE [%]") + 
   labs(x = "Landscape metrics", y = "Sample scheme") + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ 
   # theme_ipsum(axis_title_size = 14)
 
-UtilityFunctions::save_ggplot(ggplot_type, 
-                              filename = "ggplot_type.png", 
-                              path = paste0(getwd(), "/4_Plots"), 
-                              overwrite = overwrite, 
-                              width = 50, height = 25, units = "cm")
-
+# UtilityFunctions::save_ggplot(ggplot_type, 
+#                               filename = "ggplot_type.png", 
+#                               path = paste0(getwd(), "/4_Plots"), 
+#                               overwrite = overwrite, 
+#                               width = 50, height = 25, units = "cm")
 
 #### 5. Hypotheses ####
+# deviation_cleaned <- dplyr::filter(deviation_cleaned, is.finite(nrmse))
 
-deviation_cleaned <- dplyr::filter(deviation_joined, is.finite(nrmse))
+# deviation_cleaned_low <- dplyr::filter(deviation_cleaned, autocorrelation == "low")
+# deviation_cleaned_medium <- dplyr::filter(deviation_cleaned, autocorrelation == "medium")
+# deviation_cleaned_high <- dplyr::filter(deviation_cleaned, autocorrelation == "high")
+# 
+# deviation_cleaned_list <- list(deviation_cleaned_low, deviation_cleaned_medium, deviation_cleaned_high)
+# names(deviation_cleaned_list) <- c("low", "medium", "high")
 
 # Hypothesis 1
-hypothesis_1_summarised <- dplyr::group_by(deviation_joined, 
-                                           autocorrelation, type_lsm, percentage)  %>%
-  dplyr::summarise(mean = mean(nrmse, na.rm = TRUE), 
-                   median = median(nrmse, na.rm = TRUE),
-                   lower = quantile(nrmse, probs = 0.35, na.rm = TRUE), 
-                   upper = quantile(nrmse, probs = 0.65, na.rm = TRUE), 
-                   min = quantile(nrmse, probs = 0.3, na.rm = TRUE), 
-                   max = quantile(nrmse, probs = 0.7, na.rm = TRUE))
+hypothesis_1_summarised <- dplyr::group_by(deviation_cleaned, 
+                                           autocorrelation, percentage)  %>%
+  dplyr::summarise(n = n(),
+                   mean = mean(nrmse, na.rm = TRUE) * 100, 
+                   median = median(nrmse, na.rm = TRUE) * 100,
+                   lower = quantile(nrmse, probs = 0.25, na.rm = TRUE) * 100, 
+                   upper = quantile(nrmse, probs = 0.75, na.rm = TRUE) * 100, 
+                   min = quantile(nrmse, probs = 0.1, na.rm = TRUE) * 100, 
+                   max = quantile(nrmse, probs = 0.9, na.rm = TRUE) * 100) 
 
-ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
+ggplot_hypothesis_1_trimmed <- ggplot(data = hypothesis_1_summarised) +
   geom_boxplot(aes(x = as.factor(percentage), 
                    lower = lower,
                    upper = upper, 
@@ -145,29 +166,54 @@ ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
                    ymin = min, 
                    ymax = max), 
                stat = "identity") + 
-  facet_wrap(~ autocorrelation + type_lsm, scales = "free_y", 
+  facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3) +
-  labs(x = "% sampled landscape", y = "nRMSE")
+  labs(x = "Sampled landscape [%]", y = "nRMSE [%]")
 
-hypothesis_1 <- aov(deviation_cleaned$nrmse ~ factor(deviation_cleaned$percentage))
-summary(hypothesis_1)
-TukeyHSD(hypothesis_1)
+ggplot_hypothesis_1_raw <- ggplot(data = deviation_cleaned) +
+  geom_boxplot(aes(x = as.factor(percentage), 
+                   y = nrmse * 100)) + 
+  facet_wrap(~ autocorrelation, scales = "free_y" ,
+             ncol = 6, nrow = 3) +
+  labs(x = "Sampled landscape [%]", y = "nRMSE [%]")
 
-UtilityFunctions::save_ggplot(ggplot_hypothesis_1, 
-                              filename = "ggplot_hypothesis_1.png", 
-                              path = paste0(getwd(), "/4_Plots"), 
-                              overwrite = overwrite, 
-                              width = 50, height = 25, units = "cm")
+
+# xxx <- split(deviation_cleaned, deviation_cleaned$autocorrelation) %>%
+#   purrr::map(function(x) {
+#     df_split <- split(x, x$percentage)
+#     purrr::map(df_split, function(y) {
+#       qnt <- quantile(y$nrmse, probs=c(.1, .9), na.rm = T)
+#       filter(y, nrmse < qnt[2] & nrmse > qnt[1])
+#     })
+# })
+
+# xxx <- purrr::flatten_dfr(xxx)
+
+# h1_anova <- aov(xxx$nrmse ~ factor(xxx$percentage))
+# summary(h1_anova)
+# TukeyHSD(h1_anova)
+
+# list_test <- purrr::map(deviation_cleaned_list, function(x) { 
+#   k_t <- kruskal.test(x$nrmse ~ factor(x$percentage))
+#   w_t <- pairwise.wilcox.test(x$nrmse, factor(x$percentage),
+#                        p.adjust.method = "BH")
+#   list(k_t, w_t)
+#   })
+
+# kruskal.test(xxx$nrmse ~ factor(xxx$percentage))
+# pairwise.wilcox.test(xxx$nrmse, factor(xxx$percentage),
+#                      p.adjust.method = "BH")
+
 
 # Hypothesis 2
 hypothesis_2_summarised <- dplyr::group_by(deviation_joined, 
-                                           autocorrelation, type_lsm, shape)  %>%
-  dplyr::summarise(mean = mean(nrmse, na.rm = TRUE), 
-                   median = median(nrmse, na.rm = TRUE),
-                   lower = quantile(nrmse, probs = 0.35, na.rm = TRUE), 
-                   upper = quantile(nrmse, probs = 0.65, na.rm = TRUE), 
-                   min = quantile(nrmse, probs = 0.3, na.rm = TRUE), 
-                   max = quantile(nrmse, probs = 0.7, na.rm = TRUE))
+                                           autocorrelation, shape)  %>%
+  dplyr::summarise(mean = mean(nrmse, na.rm = TRUE) * 100, 
+                   median = median(nrmse, na.rm = TRUE) * 100,
+                   lower = quantile(nrmse, probs = 0.25, na.rm = TRUE) * 100, 
+                   upper = quantile(nrmse, probs = 0.75, na.rm = TRUE) * 100, 
+                   min = quantile(nrmse, probs = 0.1, na.rm = TRUE) * 100, 
+                   max = quantile(nrmse, probs = 0.9, na.rm = TRUE) * 100)
 
 ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
   geom_boxplot(aes(x = factor(shape, levels = c("rectangle", "square", "circle")), 
@@ -177,29 +223,30 @@ ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
                    ymin = min, 
                    ymax = max), 
                stat = "identity") + 
-  facet_wrap(~ autocorrelation + type_lsm, scales = "free_y", 
+  facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3) +
   labs(x = "Plot shape", y = "nRMSE") 
 
-hypothesis_2 <- aov(deviation_cleaned$nrmse ~ factor(deviation_cleaned$shape))
+hypothesis_2 <- aov(deviation_cleaned$nrmse ~ factor(deviation_cleaned$shape) + autocorrelation)
 summary(hypothesis_2)
 TukeyHSD(hypothesis_2)
 
-UtilityFunctions::save_ggplot(ggplot_hypothesis_2, 
-                              filename = "ggplot_hypothesis_2.png", 
-                              path = paste0(getwd(), "/4_Plots"), 
-                              overwrite = overwrite, 
-                              width = 50, height = 25, units = "cm")
+# UtilityFunctions::save_ggplot(ggplot_hypothesis_2, 
+#                               filename = "ggplot_hypothesis_2.png", 
+#                               path = paste0(getwd(), "/4_Plots"), 
+#                               overwrite = overwrite, 
+#                               width = 50, height = 25, units = "cm")
 
 # Hypothesis 3
 hypothesis_3_summarised <- dplyr::group_by(deviation_joined, 
-                                           autocorrelation, type_lsm, type_scheme)  %>%
-  dplyr::summarise(mean = mean(nrmse, na.rm = TRUE), 
-                   median = median(nrmse, na.rm = TRUE),
-                   lower = quantile(nrmse, probs = 0.35, na.rm = TRUE), 
-                   upper = quantile(nrmse, probs = 0.65, na.rm = TRUE), 
-                   min = quantile(nrmse, probs = 0.3, na.rm = TRUE), 
-                   max = quantile(nrmse, probs = 0.7, na.rm = TRUE))
+                                           autocorrelation, type_scheme)  %>%
+  dplyr::summarise(n = n(), 
+                   mean = mean(nrmse, na.rm = TRUE) * 100, 
+                   median = median(nrmse, na.rm = TRUE) * 100,
+                   lower = quantile(nrmse, probs = 0.25, na.rm = TRUE) * 100, 
+                   upper = quantile(nrmse, probs = 0.75, na.rm = TRUE) * 100, 
+                   min = quantile(nrmse, probs = 0.1, na.rm = TRUE) * 100, 
+                   max = quantile(nrmse, probs = 0.9, na.rm = TRUE) * 100)
 
 ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
   geom_boxplot(aes(x = factor(type_scheme, levels = c("random", "regular")), 
@@ -209,16 +256,16 @@ ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
                    ymin = min, 
                    ymax = max), 
                stat = "identity") + 
-  facet_wrap(~ autocorrelation + type_lsm, scales = "free_y", 
+  facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3) +
   labs(x = "Spatial arrangement plots", y = "nRMSE") 
 
 t.test(deviation_cleaned$nrmse ~ factor(deviation_cleaned$type_scheme))
 
-UtilityFunctions::save_ggplot(ggplot_hypothesis_3, 
-                              filename = "ggplot_hypothesis_3.png", 
-                              path = paste0(getwd(), "/4_Plots"), 
-                              overwrite = overwrite, 
-                              width = 50, height = 25, units = "cm")
+# UtilityFunctions::save_ggplot(ggplot_hypothesis_3, 
+#                               filename = "ggplot_hypothesis_3.png", 
+#                               path = paste0(getwd(), "/4_Plots"), 
+#                               overwrite = overwrite, 
+#                               width = 50, height = 25, units = "cm")
 
 

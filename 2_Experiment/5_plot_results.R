@@ -1,11 +1,10 @@
-
 #### 1. Source functions #### 
 purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = TRUE), 
             function(x) source(x))
 
 simulation_design$id <- rep(1:(nrow(simulation_design) / 50), times = 50)
 
-overwrite <- TRUE
+overwrite <- FALSE
 
 #### 2. Import results #### 
 
@@ -62,9 +61,9 @@ deviation_summarised <- dplyr::group_by(deviation_joined,
                    type_lsm = unique(type_lsm))
 
 results <- tidyr::unite(deviation_summarised, 
-               unique_label,
-               percentage, shape, type_scheme,
-               remove = FALSE) %>% 
+                        unique_label,
+                        percentage, shape, type_scheme,
+                        remove = FALSE) %>% 
   dplyr::arrange(type_scheme, shape, percentage)
 
 results$unique_label <- factor(results$unique_label, 
@@ -79,14 +78,13 @@ ggplot_metrics <- ggplot(data = results,
              ncol = 6, nrow = 3) +
   scale_fill_viridis_c(name = "nRMSE [%]") + 
   labs(x = "Landscape metrics", y = "Sample scheme") + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ 
-  # theme_ipsum(axis_title_size = 14)
+  theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
-# UtilityFunctions::save_ggplot(ggplot_metrics, 
-#                               filename = "ggplot_metrics.png", 
-#                               path = paste0(getwd(), "/4_Plots"), 
-#                               overwrite = overwrite, 
-#                               width = 210, height = 297, units = "mm")
+UtilityFunctions::save_ggplot(ggplot_metrics,
+                              filename = "ggplot_metrics.png",
+                              path = paste0(getwd(), "/4_Plots"),
+                              overwrite = overwrite,
+                              width = 50, height = 25, units = "cm")
 
 
 #### 4. Clean data ####
@@ -100,7 +98,7 @@ deviation_summarised <- dplyr::group_by(deviation_joined,
 metric_list <- split(deviation_summarised, deviation_summarised$metric) %>% 
   purrr::map(function(x) { 
     all(x$nrmse_mean >= 125)
-}) 
+  }) 
 metric_list <- unique(deviation_joined$metric)[purrr::flatten_lgl(metric_list)]
 
 deviation_cleaned <- dplyr::filter(deviation_joined, !(metric %in% metric_list))
@@ -127,29 +125,21 @@ ggplot_type <- ggplot(data = results,
   geom_text(aes(label = round(nrmse_mean, 2)), col = "black", size = 2.5) +
   facet_wrap(~ autocorrelation, ncol = 1) +
   scale_fill_viridis_c(name = "nRMSE [%]") + 
-  labs(x = "Landscape metrics", y = "Sample scheme") + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-  theme_ipsum(axis_title_size = 14)
+  labs(x = "Landscape metrics", y = "Sample scheme")  + 
+  theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
-
-# ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
+ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
 ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
 
-# UtilityFunctions::save_ggplot(ggplot_type, 
-#                               filename = "ggplot_type.png", 
-#                               path = paste0(getwd(), "/4_Plots"), 
-#                               overwrite = overwrite, 
-#                               width = 50, height = 25, units = "cm")
-
 #### 5. Hypotheses ####
-# deviation_cleaned <- dplyr::filter(deviation_cleaned, is.finite(nrmse))
+deviation_cleaned <- dplyr::filter(deviation_cleaned, is.finite(nrmse))
 
-# deviation_cleaned_low <- dplyr::filter(deviation_cleaned, autocorrelation == "low")
-# deviation_cleaned_medium <- dplyr::filter(deviation_cleaned, autocorrelation == "medium")
-# deviation_cleaned_high <- dplyr::filter(deviation_cleaned, autocorrelation == "high")
-# 
-# deviation_cleaned_list <- list(deviation_cleaned_low, deviation_cleaned_medium, deviation_cleaned_high)
-# names(deviation_cleaned_list) <- c("low", "medium", "high")
+deviation_cleaned_low <- dplyr::filter(deviation_cleaned, autocorrelation == "low")
+deviation_cleaned_medium <- dplyr::filter(deviation_cleaned, autocorrelation == "medium")
+deviation_cleaned_high <- dplyr::filter(deviation_cleaned, autocorrelation == "high")
+
+deviation_cleaned_list <- list(deviation_cleaned_low, deviation_cleaned_medium, deviation_cleaned_high)
+names(deviation_cleaned_list) <- c("low", "medium", "high")
 
 # Hypothesis 1
 hypothesis_1_summarised <- dplyr::group_by(deviation_cleaned, 
@@ -162,7 +152,7 @@ hypothesis_1_summarised <- dplyr::group_by(deviation_cleaned,
                    min = quantile(nrmse, probs = 0.1, na.rm = TRUE) * 100, 
                    max = quantile(nrmse, probs = 0.9, na.rm = TRUE) * 100) 
 
-ggplot_hypothesis_1_trimmed <- ggplot(data = hypothesis_1_summarised) +
+ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
   geom_boxplot(aes(x = as.factor(percentage), 
                    lower = lower,
                    upper = upper, 
@@ -172,42 +162,8 @@ ggplot_hypothesis_1_trimmed <- ggplot(data = hypothesis_1_summarised) +
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3) +
-  labs(x = "Sampled landscape [%]", y = "nRMSE [%]")
-
-# ggplot_hypothesis_1_raw <- ggplot(data = deviation_cleaned) +
-#   geom_boxplot(aes(x = as.factor(percentage), 
-#                    y = nrmse * 100)) + 
-#   facet_wrap(~ autocorrelation, scales = "free_y" ,
-#              ncol = 6, nrow = 3) +
-#   labs(x = "Sampled landscape [%]", y = "nRMSE [%]")
-
-
-# xxx <- split(deviation_cleaned, deviation_cleaned$autocorrelation) %>%
-#   purrr::map(function(x) {
-#     df_split <- split(x, x$percentage)
-#     purrr::map(df_split, function(y) {
-#       qnt <- quantile(y$nrmse, probs=c(.1, .9), na.rm = T)
-#       filter(y, nrmse < qnt[2] & nrmse > qnt[1])
-#     })
-# })
-
-# xxx <- purrr::flatten_dfr(xxx)
-
-# h1_anova <- aov(xxx$nrmse ~ factor(xxx$percentage))
-# summary(h1_anova)
-# TukeyHSD(h1_anova)
-
-# list_test <- purrr::map(deviation_cleaned_list, function(x) { 
-#   k_t <- kruskal.test(x$nrmse ~ factor(x$percentage))
-#   w_t <- pairwise.wilcox.test(x$nrmse, factor(x$percentage),
-#                        p.adjust.method = "BH")
-#   list(k_t, w_t)
-#   })
-
-# kruskal.test(xxx$nrmse ~ factor(xxx$percentage))
-# pairwise.wilcox.test(xxx$nrmse, factor(xxx$percentage),
-#                      p.adjust.method = "BH")
-
+  labs(x = "Sampled landscape [%]", y = "nRMSE [%]") +
+  theme_ipsum(axis_title_size = 14)
 
 # Hypothesis 2
 hypothesis_2_summarised <- dplyr::group_by(deviation_joined, 
@@ -229,17 +185,9 @@ ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3) +
-  labs(x = "Plot shape", y = "nRMSE") 
+  labs(x = "Plot shape", y = "nRMSE [%]")  +
+  theme_ipsum(axis_title_size = 14)
 
-hypothesis_2 <- aov(deviation_cleaned$nrmse ~ factor(deviation_cleaned$shape) + autocorrelation)
-summary(hypothesis_2)
-TukeyHSD(hypothesis_2)
-
-# UtilityFunctions::save_ggplot(ggplot_hypothesis_2, 
-#                               filename = "ggplot_hypothesis_2.png", 
-#                               path = paste0(getwd(), "/4_Plots"), 
-#                               overwrite = overwrite, 
-#                               width = 50, height = 25, units = "cm")
 
 # Hypothesis 3
 hypothesis_3_summarised <- dplyr::group_by(deviation_joined, 
@@ -262,14 +210,16 @@ ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3) +
-  labs(x = "Spatial arrangement plots", y = "nRMSE") 
+  labs(x = "Spatial arrangement plots", y = "nRMSE [%]")  +
+  theme_ipsum(axis_title_size = 14)
 
-t.test(deviation_cleaned$nrmse ~ factor(deviation_cleaned$type_scheme))
+library(patchwork)
 
-# UtilityFunctions::save_ggplot(ggplot_hypothesis_3, 
-#                               filename = "ggplot_hypothesis_3.png", 
-#                               path = paste0(getwd(), "/4_Plots"), 
-#                               overwrite = overwrite, 
-#                               width = 50, height = 25, units = "cm")
+ggplot_hypothesis_1_trimmed +
+  ggplot_hypothesis_2 +
+  ggplot_hypothesis_3 +
+  plot_layout(ncol = 1)
 
 
+ggsave("4_Plots/ggplot_hypotheses.png", width = 12, height = 20)
+ggsave("4_Plots/ggplot_hypotheses.eps", width = 14, height = 20)

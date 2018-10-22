@@ -87,11 +87,14 @@ ggplot_metrics <- ggplot(data = results,
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) # +
   # theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
-UtilityFunctions::save_ggplot(ggplot_metrics,
-                              filename = "ggplot_metrics.png",
-                              path = paste0(getwd(), "/4_Plots"),
-                              overwrite = overwrite,
-                              width = 50, height = 25, units = "cm")
+ggsave("4_Plots/ggplot_metrics.png", width = 12, height = 28)
+
+
+# UtilityFunctions::save_ggplot(ggplot_metrics,
+#                               filename = "ggplot_metrics.png",
+#                               path = paste0(getwd(), "/4_Plots"),
+#                               overwrite = overwrite,
+#                               width = 18, height = 28, units = "cm")
 
 #### 4. Clean data ####
 deviation_summarised <- dplyr::group_by(deviation_joined, 
@@ -135,7 +138,7 @@ ggplot_type <- ggplot(data = results,
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) # +
   # theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
-# ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
+ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
 # ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
 
 UtilityFunctions::save_ggplot(ggplot_type,

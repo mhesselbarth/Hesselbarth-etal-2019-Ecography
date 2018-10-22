@@ -125,11 +125,15 @@ ggplot_type <- ggplot(data = results,
                       aes(x = type_lsm, y = unique_label)) +
   geom_tile(aes(fill = nrmse_mean)) + 
   geom_text(aes(label = round(nrmse_mean, 2)), col = "black", size = 2.5) +
-  facet_wrap(~ autocorrelation) +
+  facet_wrap(~ autocorrelation, ncol = 1) +
   scale_fill_viridis_c(name = "nRMSE [%]") + 
   labs(x = "Landscape metrics", y = "Sample scheme") + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ 
-  # theme_ipsum(axis_title_size = 14)
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  theme_ipsum(axis_title_size = 14)
+
+
+# ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
+ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
 
 # UtilityFunctions::save_ggplot(ggplot_type, 
 #                               filename = "ggplot_type.png", 
@@ -170,12 +174,12 @@ ggplot_hypothesis_1_trimmed <- ggplot(data = hypothesis_1_summarised) +
              ncol = 6, nrow = 3) +
   labs(x = "Sampled landscape [%]", y = "nRMSE [%]")
 
-ggplot_hypothesis_1_raw <- ggplot(data = deviation_cleaned) +
-  geom_boxplot(aes(x = as.factor(percentage), 
-                   y = nrmse * 100)) + 
-  facet_wrap(~ autocorrelation, scales = "free_y" ,
-             ncol = 6, nrow = 3) +
-  labs(x = "Sampled landscape [%]", y = "nRMSE [%]")
+# ggplot_hypothesis_1_raw <- ggplot(data = deviation_cleaned) +
+#   geom_boxplot(aes(x = as.factor(percentage), 
+#                    y = nrmse * 100)) + 
+#   facet_wrap(~ autocorrelation, scales = "free_y" ,
+#              ncol = 6, nrow = 3) +
+#   labs(x = "Sampled landscape [%]", y = "nRMSE [%]")
 
 
 # xxx <- split(deviation_cleaned, deviation_cleaned$autocorrelation) %>%

@@ -4,7 +4,7 @@ purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = 
 
 simulation_design$id <- rep(1:(nrow(simulation_design) / 50), times = 50)
 
-overwrite <- TRUE
+overwrite <- FALSE
 
 library(patchwork)
 
@@ -61,9 +61,9 @@ deviation_joined <- dplyr::filter(deviation_joined, level == "landscape")
 #### 3. Summarised by metrics ####
 deviation_summarised <- dplyr::group_by(deviation_joined, 
                                         autocorrelation, percentage, shape, type_scheme, level, class, metric) %>%
-  dplyr::summarise(mse_mean = mean(mse, na.rm = TRUE) * 100, 
-                   rmse_mean = mean(rmse, na.rm = TRUE) * 100, 
-                   nrmse_mean = mean(nrmse, na.rm = TRUE) * 100, 
+  dplyr::summarise(mse_median = median(mse, na.rm = TRUE) * 100, 
+                   rmse_median = median(rmse, na.rm = TRUE) * 100, 
+                   nrmse_median = median(nrmse, na.rm = TRUE) * 100, 
                    type_lsm = unique(type_lsm))
 
 results <- tidyr::unite(deviation_summarised, 
@@ -77,8 +77,8 @@ results$unique_label <- factor(results$unique_label,
 
 ggplot_metrics <- ggplot(data = results, 
                          aes(x = metric, y = unique_label)) +
-  geom_tile(aes(fill = nrmse_mean)) + 
-  geom_text(aes(label = round(nrmse_mean, 2)), col = "black", size = 2) +
+  geom_tile(aes(fill = nrmse_median)) + 
+  geom_text(aes(label = round(nrmse_median, 2)), col = "black", size = 2) +
   facet_wrap(~ autocorrelation + type_lsm, 
              scales = "free_x", 
              ncol = 6, nrow = 3) +
@@ -87,8 +87,7 @@ ggplot_metrics <- ggplot(data = results,
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) # +
   # theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave("4_Plots/ggplot_metrics.png", width = 12, height = 28)
-
+# ggsave("4_Plots/ggplot_metrics.png", width = 12, height = 28)
 
 # UtilityFunctions::save_ggplot(ggplot_metrics,
 #                               filename = "ggplot_metrics.png",
@@ -99,14 +98,14 @@ ggsave("4_Plots/ggplot_metrics.png", width = 12, height = 28)
 #### 4. Clean data ####
 deviation_summarised <- dplyr::group_by(deviation_joined, 
                                         autocorrelation, percentage, shape, type_scheme, level, class, metric) %>%
-  dplyr::summarise(mse_mean = mean(mse, na.rm = TRUE) * 100, 
-                   rmse_mean = mean(rmse, na.rm = TRUE) * 100, 
-                   nrmse_mean = mean(nrmse, na.rm = TRUE) * 100, 
+  dplyr::summarise(mse_median = median(mse, na.rm = TRUE) * 100, 
+                   rmse_median = median(rmse, na.rm = TRUE) * 100, 
+                   nrmse_median = median(nrmse, na.rm = TRUE) * 100, 
                    type_lsm = unique(type_lsm))
 
 metric_list <- split(deviation_summarised, deviation_summarised$metric) %>% 
   purrr::map(function(x) { 
-    all(x$nrmse_mean >= 125)
+    all(x$nrmse_median >= 125)
   }) 
 metric_list <- unique(deviation_joined$metric)[purrr::flatten_lgl(metric_list)]
 
@@ -115,9 +114,9 @@ deviation_cleaned <- dplyr::filter(deviation_joined, !(metric %in% metric_list))
 #### 5. Summarised by type ####
 deviation_summarised <- dplyr::group_by(deviation_cleaned, 
                                         autocorrelation, percentage, shape, type_scheme, level, class, type_lsm) %>%
-  dplyr::summarise(mse_mean  = mean(mse, na.rm = TRUE) * 100, 
-                   rmse_mean  = mean(rmse, na.rm = TRUE) * 100, 
-                   nrmse_mean = mean(nrmse, na.rm = TRUE) * 100)
+  dplyr::summarise(mse_median  = median(mse, na.rm = TRUE) * 100, 
+                   rmse_median  = median(rmse, na.rm = TRUE) * 100, 
+                   nrmse_median = median(nrmse, na.rm = TRUE) * 100)
 
 results <- tidyr::unite(deviation_summarised, 
                         unique_label,
@@ -130,15 +129,15 @@ results$unique_label <- factor(results$unique_label,
 
 ggplot_type <- ggplot(data = results, 
                       aes(x = type_lsm, y = unique_label)) +
-  geom_tile(aes(fill = nrmse_mean)) + 
-  geom_text(aes(label = round(nrmse_mean, 2)), col = "black", size = 2.5) +
+  geom_tile(aes(fill = nrmse_median)) + 
+  geom_text(aes(label = round(nrmse_median, 2)), col = "black", size = 2.5) +
   facet_wrap(~ autocorrelation, ncol = 1) +
   scale_fill_viridis_c(name = "nRMSE [%]") + 
   labs(x = "Landscape metrics", y = "Sample scheme") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) # +
   # theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
+# ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
 # ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
 
 UtilityFunctions::save_ggplot(ggplot_type,

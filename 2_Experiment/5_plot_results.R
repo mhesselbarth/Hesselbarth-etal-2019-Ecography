@@ -4,7 +4,9 @@ purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = 
 
 simulation_design$id <- rep(1:(nrow(simulation_design) / 50), times = 50)
 
-overwrite <- FALSE
+overwrite <- TRUE
+
+library(patchwork)
 
 #### 2. Import results #### 
 
@@ -29,7 +31,11 @@ deviation_high_ac$autocorrelation <- "high"
 
 # Create one full dataset
 deviation_complete_ac <- dplyr::bind_rows(deviation_low_ac, deviation_medium_ac, deviation_high_ac)
-deviation_complete_ac$autocorrelation <- factor(deviation_complete_ac$autocorrelation, levels=c('low','medium','high'))
+deviation_complete_ac$autocorrelation <- factor(deviation_complete_ac$autocorrelation, 
+                                                levels = c("low", "medium", "high"),
+                                                labels = c("low spatial autocorrelation",
+                                                "medium spatial autocorrelation",
+                                                "high spatial autocorrelation"))
 
 deviation_joined <- dplyr::filter(deviation_complete_ac, level == "landscape") %>% 
   dplyr::left_join(unique(simulation_design[, -5]), 
@@ -77,15 +83,15 @@ ggplot_metrics <- ggplot(data = results,
              scales = "free_x", 
              ncol = 6, nrow = 3) +
   scale_fill_viridis_c(name = "nRMSE [%]") + 
-  labs(x = "Landscape metrics", y = "Sample scheme") + 
-  theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
+  labs(x = "Landscape metrics", y = "Sample scheme") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # +
+  # theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
 UtilityFunctions::save_ggplot(ggplot_metrics,
                               filename = "ggplot_metrics.png",
                               path = paste0(getwd(), "/4_Plots"),
                               overwrite = overwrite,
                               width = 50, height = 25, units = "cm")
-
 
 #### 4. Clean data ####
 deviation_summarised <- dplyr::group_by(deviation_joined, 
@@ -125,21 +131,21 @@ ggplot_type <- ggplot(data = results,
   geom_text(aes(label = round(nrmse_mean, 2)), col = "black", size = 2.5) +
   facet_wrap(~ autocorrelation, ncol = 1) +
   scale_fill_viridis_c(name = "nRMSE [%]") + 
-  labs(x = "Landscape metrics", y = "Sample scheme")  + 
-  theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
+  labs(x = "Landscape metrics", y = "Sample scheme") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # +
+  # theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
-ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
+# ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
+# ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
+
+UtilityFunctions::save_ggplot(ggplot_type,
+                              filename = "ggplot_type.png",
+                              path = paste0(getwd(), "/4_Plots"),
+                              overwrite = overwrite,
+                              width = 50, height = 25, units = "cm")
 
 #### 5. Hypotheses ####
 deviation_cleaned <- dplyr::filter(deviation_cleaned, is.finite(nrmse))
-
-deviation_cleaned_low <- dplyr::filter(deviation_cleaned, autocorrelation == "low")
-deviation_cleaned_medium <- dplyr::filter(deviation_cleaned, autocorrelation == "medium")
-deviation_cleaned_high <- dplyr::filter(deviation_cleaned, autocorrelation == "high")
-
-deviation_cleaned_list <- list(deviation_cleaned_low, deviation_cleaned_medium, deviation_cleaned_high)
-names(deviation_cleaned_list) <- c("low", "medium", "high")
 
 # Hypothesis 1
 hypothesis_1_summarised <- dplyr::group_by(deviation_cleaned, 
@@ -161,9 +167,9 @@ ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
                    ymax = max), 
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
-             ncol = 6, nrow = 3) +
-  labs(x = "Sampled landscape [%]", y = "nRMSE [%]") +
-  theme_ipsum(axis_title_size = 14)
+             ncol = 6, nrow = 3)  +
+  labs(x = "Sampled landscape [%]", y = "nRMSE [%]") # +
+  # theme_ipsum(axis_title_size = 14)
 
 # Hypothesis 2
 hypothesis_2_summarised <- dplyr::group_by(deviation_joined, 
@@ -185,8 +191,8 @@ ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3) +
-  labs(x = "Plot shape", y = "nRMSE [%]")  +
-  theme_ipsum(axis_title_size = 14)
+  labs(x = "Plot shape", y = "nRMSE [%]") # +
+  # theme_ipsum(axis_title_size = 14)
 
 
 # Hypothesis 3
@@ -210,15 +216,19 @@ ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3) +
-  labs(x = "Spatial arrangement plots", y = "nRMSE [%]")  +
-  theme_ipsum(axis_title_size = 14)
+  labs(x = "Spatial arrangement plots", y = "nRMSE [%]") # +
+  # theme_ipsum(axis_title_size = 14)
 
-library(patchwork)
-
-ggplot_hypothesis_1_trimmed +
+ggplot_hypothesis_complete <- ggplot_hypothesis_1 +
   ggplot_hypothesis_2 +
   ggplot_hypothesis_3 +
   plot_layout(ncol = 1)
+
+UtilityFunctions::save_ggplot(ggplot_hypothesis_complete,
+                              filename = "ggplot_hypothesis_complete.png",
+                              path = paste0(getwd(), "/4_Plots"),
+                              overwrite = overwrite,
+                              width = 50, height = 25, units = "cm")
 
 
 ggsave("4_Plots/ggplot_hypotheses.png", width = 12, height = 20)

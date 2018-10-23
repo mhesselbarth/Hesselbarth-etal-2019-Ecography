@@ -78,16 +78,18 @@ results$unique_label <- factor(results$unique_label,
 ggplot_metrics <- ggplot(data = results, 
                          aes(x = metric, y = unique_label)) +
   geom_tile(aes(fill = nrmse_median)) + 
-  geom_text(aes(label = round(nrmse_median, 2)), col = "black", size = 2) +
+  geom_text(aes(label = round(nrmse_median, 1)), col = "black") +
   facet_wrap(~ autocorrelation + type_lsm, 
              scales = "free_x", 
              ncol = 6, nrow = 3) +
   scale_fill_viridis_c(name = "nRMSE [%]") + 
   labs(x = "Landscape metrics", y = "Sample scheme") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        text = element_text(size = 12.5), 
+        panel.border = element_blank()) # +
   # theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
-# ggsave("4_Plots/ggplot_metrics.png", width = 12, height = 28)
+# ggsave("4_Plots/ggplot_metrics.png", width = 15, height = 18)
 
 # UtilityFunctions::save_ggplot(ggplot_metrics,
 #                               filename = "ggplot_metrics.png",
@@ -130,15 +132,16 @@ results$unique_label <- factor(results$unique_label,
 ggplot_type <- ggplot(data = results, 
                       aes(x = type_lsm, y = unique_label)) +
   geom_tile(aes(fill = nrmse_median)) + 
-  geom_text(aes(label = round(nrmse_median, 2)), col = "black", size = 2.5) +
+  geom_text(aes(label = round(nrmse_median, 2)), col = "black") +
   facet_wrap(~ autocorrelation, ncol = 1) +
   scale_fill_viridis_c(name = "nRMSE [%]") + 
   labs(x = "Landscape metrics", y = "Sample scheme") +
   theme_light() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        text = element_text(size = 15),
         panel.border = element_blank()) 
 
-# ggsave("4_Plots/ggplot_type.png", width = 12, height = 28)
+ggsave("4_Plots/ggplot_type.png", width = 15, height = 18)
 # ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
 
 #### 5. Hypotheses ####
@@ -165,7 +168,8 @@ ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3)  +
-  labs(x = "Sampled landscape [%]", y = "nRMSE [%]") # +
+  labs(x = "Sampled landscape [%]", y = "nRMSE [%]") + 
+  theme(text = element_text(size = 15)) # +
   # theme_ipsum(axis_title_size = 14)
 
 # Hypothesis 2
@@ -188,7 +192,8 @@ ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3) +
-  labs(x = "Plot shape", y = "nRMSE [%]") # +
+  labs(x = "Plot shape", y = "nRMSE [%]") + 
+  theme(text = element_text(size = 15)) # +
   # theme_ipsum(axis_title_size = 14)
 
 
@@ -213,7 +218,8 @@ ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 6, nrow = 3) +
-  labs(x = "Spatial arrangement plots", y = "nRMSE [%]") # +
+  labs(x = "Spatial arrangement plots", y = "nRMSE [%]") + 
+  theme(text = element_text(size = 15)) # +
   # theme_ipsum(axis_title_size = 14)
 
 ggplot_hypothesis_1 +
@@ -222,5 +228,5 @@ ggplot_hypothesis_1 +
   plot_layout(ncol = 1) +
   patchwork::plot_annotation(tag_levels = "a", tag_suffix = ")")
 
-ggsave("4_Plots/ggplot_hypotheses.png", width = 12, height = 20)
+ggsave("4_Plots/ggplot_hypotheses.png", width = 15, height = 18)
 ggsave("4_Plots/ggplot_hypotheses.eps", width = 14, height = 20)

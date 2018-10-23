@@ -78,7 +78,7 @@ results$unique_label <- factor(results$unique_label,
 ggplot_metrics <- ggplot(data = results, 
                          aes(x = metric, y = unique_label)) +
   geom_tile(aes(fill = nrmse_median)) + 
-  geom_text(aes(label = round(nrmse_median, 1)), col = "black") +
+  geom_text(aes(label = round(nrmse_median, 1)), col = "black", size = 1.75) +
   facet_wrap(~ autocorrelation + type_lsm, 
              scales = "free_x", 
              ncol = 6, nrow = 3) +
@@ -89,7 +89,7 @@ ggplot_metrics <- ggplot(data = results,
         panel.border = element_blank()) # +
   # theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
-# ggsave("4_Plots/ggplot_metrics.png", width = 15, height = 18)
+ggsave("4_Plots/ggplot_metrics.png", width = 15, height = 18)
 
 # UtilityFunctions::save_ggplot(ggplot_metrics,
 #                               filename = "ggplot_metrics.png",

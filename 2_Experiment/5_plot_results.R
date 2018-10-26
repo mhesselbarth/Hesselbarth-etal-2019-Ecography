@@ -89,8 +89,7 @@ ggplot_metrics <- ggplot(data = results,
         panel.border = element_blank()) # +
   # theme_ipsum(axis_title_size = 14, axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave("4_Plots/ggplot_metrics.png", width = 15, height = 18)
-
+# ggsave("4_Plots/ggplot_metrics.png", width = 15, height = 18)
 # UtilityFunctions::save_ggplot(ggplot_metrics,
 #                               filename = "ggplot_metrics.png",
 #                               path = paste0(getwd(), "/4_Plots"),
@@ -141,7 +140,7 @@ ggplot_type <- ggplot(data = results,
         text = element_text(size = 15),
         panel.border = element_blank()) 
 
-ggsave("4_Plots/ggplot_type.png", width = 15, height = 18)
+# ggsave("4_Plots/ggplot_type.png", width = 15, height = 18)
 # ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
 
 #### 5. Hypotheses ####
@@ -171,6 +170,7 @@ ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
   labs(x = "Sampled landscape [%]", y = "nRMSE [%]") + 
   theme(text = element_text(size = 15)) # +
   # theme_ipsum(axis_title_size = 14)
+
 
 # Hypothesis 2
 hypothesis_2_summarised <- dplyr::group_by(deviation_joined, 

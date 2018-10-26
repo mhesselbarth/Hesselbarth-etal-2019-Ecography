@@ -228,5 +228,5 @@ ggplot_hypothesis_1 +
   plot_layout(ncol = 1) +
   patchwork::plot_annotation(tag_levels = "a", tag_suffix = ")")
 
-ggsave("4_Plots/ggplot_hypotheses.png", width = 15, height = 18)
-ggsave("4_Plots/ggplot_hypotheses.eps", width = 14, height = 20)
+# ggsave("4_Plots/ggplot_hypotheses.png", width = 15, height = 18)
+# ggsave("4_Plots/ggplot_hypotheses.eps", width = 14, height = 20)

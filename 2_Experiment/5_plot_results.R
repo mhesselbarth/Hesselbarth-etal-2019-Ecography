@@ -166,7 +166,7 @@ ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
                    ymax = max), 
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
-             ncol = 6, nrow = 3)  +
+             ncol = 3, nrow = 1)  +
   labs(x = "Sampled landscape [%]", y = "nRMSE [%]") + 
   theme(text = element_text(size = 15)) # +
   # theme_ipsum(axis_title_size = 14)
@@ -191,7 +191,7 @@ ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
                    ymax = max), 
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
-             ncol = 6, nrow = 3) +
+             ncol = 3, nrow = 1) +
   labs(x = "Plot shape", y = "nRMSE [%]") + 
   theme(text = element_text(size = 15)) # +
   # theme_ipsum(axis_title_size = 14)
@@ -217,7 +217,7 @@ ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
                    ymax = max), 
                stat = "identity") + 
   facet_wrap(~ autocorrelation, scales = "free_y",
-             ncol = 6, nrow = 3) +
+             ncol = 3, nrow = 1) +
   labs(x = "Spatial arrangement plots", y = "nRMSE [%]") + 
   theme(text = element_text(size = 15)) # +
   # theme_ipsum(axis_title_size = 14)

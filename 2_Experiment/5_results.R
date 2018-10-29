@@ -34,8 +34,8 @@ deviation_complete_ac <- dplyr::bind_rows(deviation_low_ac, deviation_medium_ac,
 deviation_complete_ac$autocorrelation <- factor(deviation_complete_ac$autocorrelation, 
                                                 levels = c("low", "medium", "high"),
                                                 labels = c("low spatial autocorrelation",
-                                                "medium spatial autocorrelation",
-                                                "high spatial autocorrelation"))
+                                                           "medium spatial autocorrelation",
+                                                           "high spatial autocorrelation"))
 
 deviation_joined <- dplyr::filter(deviation_complete_ac, level == "landscape") %>% 
   dplyr::left_join(unique(simulation_design[, -5]), 
@@ -55,8 +55,6 @@ deviation_joined <- dplyr::mutate(deviation_joined,
                                                                 size == 20000 & n_scheme == 2 ~ 10,
                                                                 size == 20000 & n_scheme == 5 ~ 35,
                                                                 size == 20000 & n_scheme == 10 ~ 75))
-
-deviation_joined <- dplyr::filter(deviation_joined, level == "landscape")
 
 #### 3. Summarised by metrics ####
 deviation_summarised <- dplyr::group_by(deviation_joined, 
@@ -112,6 +110,8 @@ metric_list <- unique(deviation_joined$metric)[purrr::flatten_lgl(metric_list)]
 
 deviation_cleaned <- dplyr::filter(deviation_joined, !(metric %in% metric_list))
 
+deviation_cleaned <- dplyr::filter(deviation_cleaned, is.finite(nrmse))
+
 #### 5. Summarised by type ####
 deviation_summarised <- dplyr::group_by(deviation_cleaned, 
                                         autocorrelation, percentage, shape, type_scheme, level, class, type_lsm) %>%
@@ -143,8 +143,27 @@ ggplot_type <- ggplot(data = results,
 # ggsave("4_Plots/ggplot_type.png", width = 15, height = 18)
 # ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
 
+### General analyses ####
+# Metrics with a nRMSE > 125% for all sampling schemes
+which(metric_list == TRUE)
+
+# Median for autocorrelations
+dplyr::group_by(deviation_cleaned, autocorrelation) %>% 
+  summarise(median = median(nrmse, na.rm = TRUE) * 100) %>% 
+  dplyr::arrange(median)
+
+# Median for types
+dplyr::group_by(deviation_cleaned, type_lsm) %>% 
+  summarise(median = median(nrmse, na.rm = TRUE) * 100) %>% 
+  dplyr::arrange(median)
+
+# Percentage metrics nRMSE < 25%
+dplyr::filter(deviation_cleaned, nrmse < 0.25) %>%
+  dplyr::group_by(autocorrelation) %>%
+  summarise(below_thres = (n() / (58 * 54 * 50) * 100)) %>% # 54 sampling schemes, 50 repetitions, 58 metrics
+  dplyr::arrange(autocorrelation)
+
 #### 5. Hypotheses ####
-deviation_cleaned <- dplyr::filter(deviation_cleaned, is.finite(nrmse))
 
 # Hypothesis 1
 hypothesis_1_summarised <- dplyr::group_by(deviation_cleaned, 

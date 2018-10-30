@@ -166,6 +166,9 @@ dplyr::filter(deviation_cleaned, nrmse < 0.25) %>%
 #### 5. Hypotheses ####
 
 # Hypothesis 1
+dplyr::group_by(deviation_cleaned, percentage) %>%
+  dplyr::summarise(median = median(nrmse, na.rm = TRUE) * 100)
+
 hypothesis_1_summarised <- dplyr::group_by(deviation_cleaned, 
                                            autocorrelation, percentage)  %>%
   dplyr::summarise(n = n(),
@@ -193,6 +196,9 @@ ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
 
 
 # Hypothesis 2
+dplyr::group_by(deviation_cleaned, shape) %>%
+  dplyr::summarise(median = median(nrmse, na.rm = TRUE) * 100)
+
 hypothesis_2_summarised <- dplyr::group_by(deviation_joined, 
                                            autocorrelation, shape)  %>%
   dplyr::summarise(mean = mean(nrmse, na.rm = TRUE) * 100, 
@@ -219,6 +225,9 @@ ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
 
 
 # Hypothesis 3
+dplyr::group_by(deviation_cleaned, type_scheme) %>%
+  dplyr::summarise(median = median(nrmse, na.rm = TRUE) * 100)
+
 hypothesis_3_summarised <- dplyr::group_by(deviation_joined, 
                                            autocorrelation, type_scheme)  %>%
   dplyr::summarise(n = n(), 

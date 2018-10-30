@@ -145,7 +145,7 @@ ggplot_type <- ggplot(data = results,
 
 ### General analyses ####
 # Metrics with a nRMSE > 125% for all sampling schemes
-which(metric_list == TRUE)
+metric_list
 
 # Median for autocorrelations
 dplyr::group_by(deviation_cleaned, autocorrelation) %>% 
@@ -187,6 +187,7 @@ ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 3, nrow = 1)  +
   labs(x = "Sampled landscape [%]", y = "nRMSE [%]") + 
+  theme_bw() +
   theme(text = element_text(size = 15)) # +
   # theme_ipsum(axis_title_size = 14)
 
@@ -212,6 +213,7 @@ ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 3, nrow = 1) +
   labs(x = "Plot shape", y = "nRMSE [%]") + 
+  theme_bw() +
   theme(text = element_text(size = 15)) # +
   # theme_ipsum(axis_title_size = 14)
 
@@ -238,6 +240,7 @@ ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
   facet_wrap(~ autocorrelation, scales = "free_y",
              ncol = 3, nrow = 1) +
   labs(x = "Spatial arrangement plots", y = "nRMSE [%]") + 
+  theme_bw() +
   theme(text = element_text(size = 15)) # +
   # theme_ipsum(axis_title_size = 14)
 

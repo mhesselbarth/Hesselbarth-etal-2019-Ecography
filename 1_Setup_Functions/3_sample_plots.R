@@ -1,3 +1,5 @@
+# sample plots using different shapes
+
 sample_plots <- function(landscape, i, what, shape, size, type, n){
   
   if(shape == "circle"){

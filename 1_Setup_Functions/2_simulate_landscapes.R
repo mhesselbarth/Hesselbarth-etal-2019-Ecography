@@ -1,6 +1,8 @@
-# function to simulate landscapes with low to high spatial autocorrelation
+# simulate landscapes with low, medium or high spatial autocorrelation
 
 simulate_landscapes <- function(ac, user_seed) {
+  
+  # set different autocorrelation fract_dims
   if (ac == "low") {
     fract_dim <- 0.2
   }
@@ -15,6 +17,7 @@ simulate_landscapes <- function(ac, user_seed) {
   
   else {stop("Please select ac = 'low', 'medium' or 'high'")}
   
+  # create landscape and classify into 5 discrete classes
   landscapetools::util_classify(
     NLMR::nlm_fbm(ncol = 500,
                   nrow = 500,

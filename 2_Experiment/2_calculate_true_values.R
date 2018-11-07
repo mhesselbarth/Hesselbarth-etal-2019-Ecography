@@ -1,9 +1,14 @@
+#### 1. Load libraries and source functions #### 
+library(clustermq)
+library(landscapemetrics)
+library(purrr)
+library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions")
+library(readr)
 
-#### 1. Source functions #### 
 purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = TRUE), 
             function(x) source(x))
 
-overwrite <- FALSE
+overwrite <- FALSE # dont overwrite if file already exists
 
 #### 2. Low AC ####
 landscapes_low_ac <- readr::read_rds(paste0(getwd(), 

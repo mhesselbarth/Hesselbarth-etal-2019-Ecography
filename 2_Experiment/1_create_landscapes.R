@@ -1,5 +1,10 @@
+#### 1. Load libraries and source functions #### 
+library(clustermq)
+library(landscapetools)
+library(NLMR)
+library(purrr)
+library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions")
 
-#### 1. Source functions #### 
 purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = TRUE), 
             function(x) source(x))
 
@@ -13,7 +18,6 @@ landscapes_low_ac <- clustermq::Q(fun = simulate_landscapes,
                                   template = list(queue = "mpi-short", 
                                                   walltime = "02:00", 
                                                   processes = 1))
-
 
 # Medium AC
 landscapes_medium_ac <- clustermq::Q(fun = simulate_landscapes, 
@@ -35,7 +39,7 @@ landscapes_high_ac <- clustermq::Q(fun = simulate_landscapes,
 
 #### 3. Save landscapes ####
 
-overwrite <- FALSE
+overwrite <- FALSE # dont overwrite if file already exists
 
 # Low AC
 UtilityFunctions::save_rds(object = landscapes_low_ac, 

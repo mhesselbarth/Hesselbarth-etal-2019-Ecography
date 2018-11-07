@@ -1,13 +1,20 @@
+#### 1. Load libraries and source functions #### 
+library(clustermq)
+library(landscapemetrics)
+library(maptools)
+library(purrr)
+library(raster)
+library(readr)
+library(sp)
 
-#### 1. Source functions #### 
 purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = TRUE), 
             function(x) source(x))
 
-overwrite <- FALSE
+overwrite <- FALSE # dont overwrite if file already exists
 
 #### 2. Low AC #### 
 
-landscapes_low_ac <- read_rds(paste0(getwd(), 
+landscapes_low_ac <- readr::read_rds(paste0(getwd(), 
                                      "/3_Output/landscapes_low_ac_50.rds"))
 
 sampling_low_ac <- clustermq::Q_rows(fun = sample_plots,
@@ -31,7 +38,7 @@ UtilityFunctions::save_rds(object = sampling_low_ac,
 # rm(landscapes_low_ac)
 
 #### 3. Medium AC ####
-landscapes_medium_ac <- read_rds(paste0(getwd(), 
+landscapes_medium_ac <- readr::read_rds(paste0(getwd(), 
                                         "/3_Output/landscapes_medium_ac_50.rds"))
 
 sampling_medium_ac <- clustermq::Q_rows(fun = sample_plots,
@@ -55,7 +62,7 @@ UtilityFunctions::save_rds(object = sampling_medium_ac,
 # rm(landscapes_medium_ac)
 
 #### 4. High AC ####
-landscapes_high_ac <- read_rds(paste0(getwd(), 
+landscapes_high_ac <- readr::read_rds(paste0(getwd(), 
                                       "/3_Output/landscapes_high_ac_50.rds"))
 
 sampling_high_ac <- clustermq::Q_rows(fun = sample_plots,

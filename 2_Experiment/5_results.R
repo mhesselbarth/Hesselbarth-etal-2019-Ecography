@@ -212,7 +212,7 @@ ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
              ncol = 3, nrow = 1)  +
   labs(x = "Sampled landscape [%]", y = "nRMSE [%]") + 
   theme_bw() +
-  theme(text = element_text(size = 15))
+  theme(text = element_text(size = 25))
 
 
 # Hypothesis 2
@@ -243,7 +243,7 @@ ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
              ncol = 3, nrow = 1) +
   labs(x = "Plot shape", y = "nRMSE [%]") + 
   theme_bw() +
-  theme(text = element_text(size = 15))
+  theme(text = element_text(size = 25))
 
 
 # Hypothesis 3
@@ -275,7 +275,7 @@ ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
              ncol = 3, nrow = 1) +
   labs(x = "Spatial arrangement plots", y = "nRMSE [%]") + 
   theme_bw() +
-  theme(text = element_text(size = 15))
+  theme(text = element_text(size = 25))
 
 # Create one large plot
 ggplot_hypothesis_1 +
@@ -284,5 +284,5 @@ ggplot_hypothesis_1 +
   plot_layout(ncol = 1) +
   patchwork::plot_annotation(tag_levels = "a", tag_suffix = ")")
 
-# ggsave("4_Plots/ggplot_hypotheses.png", width = 15, height = 18)
+ggsave("4_Plots/ggplot_hypotheses.png", width = 15, height = 18)
 # ggsave("4_Plots/ggplot_hypotheses.eps", width = 14, height = 20)

@@ -85,6 +85,17 @@ results <- tidyr::unite(deviation_summarised,
 results$unique_label <- factor(results$unique_label, 
                                levels = unique(results$unique_label))
 
+# relabel type_lsm
+results$type_lsm <- case_when(
+  results$type_lsm == "aggregation metric"   ~ "aggregation metrics",
+  results$type_lsm == "area and edge metric" ~ "area and edge metrics",
+  results$type_lsm == "core area metric"     ~ "core area metrics",
+  results$type_lsm == "diversity metric"     ~ "diversity metrics",
+  results$type_lsm == "new metric"           ~ "complexity metrics",
+  results$type_lsm == "shape metric"         ~ "shape metrics",
+  TRUE ~ as.character(results$type_lsm)
+)
+
 # plot result
 ggplot_metrics <- ggplot(data = results, 
                          aes(x = metric, y = unique_label)) +
@@ -144,6 +155,17 @@ results <- tidyr::unite(deviation_summarised,
 
 results$unique_label <- factor(results$unique_label, 
                                levels = unique(results$unique_label))
+
+# relabel type_lsm
+results$type_lsm <- case_when(
+  results$type_lsm == "aggregation metric"   ~ "aggregation metrics",
+  results$type_lsm == "area and edge metric" ~ "area and edge metrics",
+  results$type_lsm == "core area metric"     ~ "core area metrics",
+  results$type_lsm == "diversity metric"     ~ "diversity metrics",
+  results$type_lsm == "new metric"           ~ "complexity metrics",
+  results$type_lsm == "shape metric"         ~ "shape metrics",
+  TRUE ~ as.character(results$type_lsm)
+)
 
 # plot results
 ggplot_type <- ggplot(data = results, 

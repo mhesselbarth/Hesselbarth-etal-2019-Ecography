@@ -108,14 +108,15 @@ ggplot_metrics <- ggplot(data = results,
   labs(x = "Landscape metrics", y = "Sample scheme") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), 
         text = element_text(size = 12.5), 
-        panel.border = element_blank())
+        panel.border = element_blank(), 
+        legend.position = "bottom")
 
 # ggsave("4_Plots/ggplot_metrics.png", width = 15, height = 18)
 # UtilityFunctions::save_ggplot(ggplot_metrics,
 #                               filename = "ggplot_metrics.png",
 #                               path = paste0(getwd(), "/4_Plots"),
 #                               overwrite = overwrite,
-#                               width = 18, height = 28, units = "cm")
+#                               width = 210, height = 297, units = "mm")
 
 #### 4. Clean data ####
 # Summarise nrmse for each metric
@@ -178,7 +179,8 @@ ggplot_type <- ggplot(data = results,
   theme_light() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         text = element_text(size = 15),
-        panel.border = element_blank()) 
+        panel.border = element_blank(), 
+        legend.position = "bottom") 
 
 # ggsave("4_Plots/ggplot_type.png", width = 15, height = 18)
 # ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)

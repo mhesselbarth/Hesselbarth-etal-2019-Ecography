@@ -106,17 +106,14 @@ ggplot_metrics <- ggplot(data = results,
              ncol = 6, nrow = 3) +
   scale_fill_viridis_c(name = "nRMSE [%]") + 
   labs(x = "Landscape metrics", y = "Sample scheme") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
-        text = element_text(size = 12.5), 
+  theme(axis.text.x = element_text(angle = 90), 
+        text = element_text(size = 13.5), 
         panel.border = element_blank(), 
-        legend.position = "bottom")
+        legend.position = "bottom", 
+        legend.key.width=unit(3, "cm"))
 
 # ggsave("4_Plots/ggplot_metrics.png", width = 15, height = 18)
-# UtilityFunctions::save_ggplot(ggplot_metrics,
-#                               filename = "ggplot_metrics.png",
-#                               path = paste0(getwd(), "/4_Plots"),
-#                               overwrite = overwrite,
-#                               width = 210, height = 297, units = "mm")
+# ggsave("4_Plots/ggplot_metrics.eps", width = 15, height = 18)
 
 #### 4. Clean data ####
 # Summarise nrmse for each metric
@@ -177,13 +174,14 @@ ggplot_type <- ggplot(data = results,
   scale_fill_viridis_c(name = "nRMSE [%]") + 
   labs(x = "Landscape metrics", y = "Sample scheme") +
   theme_light() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.x = element_text(angle = 90),
         text = element_text(size = 15),
         panel.border = element_blank(), 
-        legend.position = "bottom") 
+        legend.position = "bottom", 
+        legend.key.width=unit(3, "cm")) 
 
 # ggsave("4_Plots/ggplot_type.png", width = 15, height = 18)
-# ggsave("4_Plots/ggplot_type.eps", width = 14, height = 28)
+# ggsave("4_Plots/ggplot_type.eps", width = 15, height = 18)
 
 ### General analyses ####
 # Metrics with a nRMSE > 125% for all sampling schemes

@@ -110,7 +110,7 @@ ggplot_metrics <- ggplot(data = results,
         text = element_text(size = 13.5), 
         panel.border = element_blank(), 
         legend.position = "bottom", 
-        legend.key.width=unit(3, "cm"))
+        legend.key.width = unit(3, "cm"))
 
 # ggsave("4_Plots/ggplot_metrics.png", width = 15, height = 18)
 # ggsave("4_Plots/ggplot_metrics.eps", width = 15, height = 18)
@@ -178,7 +178,7 @@ ggplot_type <- ggplot(data = results,
         text = element_text(size = 15),
         panel.border = element_blank(), 
         legend.position = "bottom", 
-        legend.key.width=unit(3, "cm")) 
+        legend.key.width = unit(3, "cm")) 
 
 # ggsave("4_Plots/ggplot_type.png", width = 15, height = 18)
 # ggsave("4_Plots/ggplot_type.eps", width = 15, height = 18)
@@ -306,5 +306,5 @@ ggplot_hypothesis_1 +
   plot_layout(ncol = 1) +
   patchwork::plot_annotation(tag_levels = "a", tag_suffix = ")")
 
-ggsave("4_Plots/ggplot_hypotheses.png", width = 15, height = 18)
-# ggsave("4_Plots/ggplot_hypotheses.eps", width = 14, height = 20)
+# ggsave("4_Plots/ggplot_hypotheses.png", width = 15, height = 18)
+# ggsave("4_Plots/ggplot_hypotheses.eps", width = 15, height = 18)

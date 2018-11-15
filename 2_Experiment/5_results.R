@@ -51,7 +51,7 @@ deviation_joined <- dplyr::filter(deviation_complete_ac, level == "landscape") %
                    by = c("simulation_id" = "id"), 
                    suffix = c("_deviation", "_scheme")) %>% 
   dplyr::left_join(landscapemetrics::lsm_abbreviations_names, 
-                   by = "metric", 
+                   by = c("level", "metric"), 
                    suffix = c("_scheme", "_lsm"))
 
 # because number of plots is different, the area sampled is set here to same value for later grouping

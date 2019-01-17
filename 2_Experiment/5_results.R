@@ -2,6 +2,7 @@
 library(dplyr)
 library(ggplot2)
 library(landscapemetrics)
+library(patchwork)
 library(purrr)
 library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions")
 library(readr)
@@ -13,8 +14,6 @@ purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = 
 simulation_design$id <- rep(1:(nrow(simulation_design) / 50), times = 50)
 
 overwrite <- FALSE
-
-library(patchwork)
 
 #### 2. Import results #### 
 

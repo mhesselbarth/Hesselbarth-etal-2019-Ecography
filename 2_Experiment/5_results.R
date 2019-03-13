@@ -303,7 +303,7 @@ ggplot_hypothesis_1 +
   ggplot_hypothesis_2 +
   ggplot_hypothesis_3 +
   plot_layout(ncol = 1) +
-  patchwork::plot_annotation(tag_levels = "a", tag_suffix = ")")
+  patchwork::plot_annotation(tag_levels = "A", tag_suffix = ")")
 
 # ggsave("4_Plots/ggplot_hypotheses.png", width = 15, height = 18)
 # ggsave("4_Plots/ggplot_hypotheses.eps", width = 15, height = 18)

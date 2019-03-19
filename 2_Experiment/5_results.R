@@ -311,6 +311,12 @@ helpeR::save_ggplot(plot = ggplot_hypotheses,
 
 helpeR::save_ggplot(plot = ggplot_hypotheses, 
                     path = "4_Plots", 
+                    filename = "ggplot_hypotheses.jpeg", 
+                    width = 15, height = 18, dpi = 300,
+                    overwrite = FALSE)
+
+helpeR::save_ggplot(plot = ggplot_hypotheses, 
+                    path = "4_Plots", 
                     filename = "ggplot_hypotheses.eps", 
                     width = 15, height = 18, dpi = 300, 
                     overwrite = FALSE)

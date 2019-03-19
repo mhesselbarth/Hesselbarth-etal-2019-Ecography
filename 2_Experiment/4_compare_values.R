@@ -1,7 +1,7 @@
 #### 1. Load libraries and source functions #### 
 library(dplyr)
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR")
 library(purrr)
-library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions")
 library(readr)
 
 purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = TRUE), 
@@ -61,10 +61,10 @@ deviation_low_ac <- bind_rows(sampling_low_ac) %>%
                 rmse = sqrt(mse), 
                 nrmse = rmse / estimate)
 
-UtilityFunctions::save_rds(object = deviation_low_ac, 
-                           filename = "deviation_low_ac_50.rds", 
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
+helpeR::save_rds(object = deviation_low_ac, 
+                 filename = "deviation_low_ac_50.rds", 
+                 path = paste0(getwd(), "/3_Output"),
+                 overwrite = overwrite)
 
 # rm(sampling_low_ac, true_value_low_ac)
 
@@ -115,10 +115,10 @@ deviation_medium_ac <- bind_rows(sampling_medium_ac) %>%
                 rmse = sqrt(mse), 
                 nrmse = rmse / estimate)
 
-UtilityFunctions::save_rds(object = deviation_medium_ac, 
-                           filename = "deviation_medium_ac_50.rds", 
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
+helpeR::save_rds(object = deviation_medium_ac, 
+                 filename = "deviation_medium_ac_50.rds", 
+                 path = paste0(getwd(), "/3_Output"),
+                 overwrite = overwrite)
 
 # rm(sampling_medium_ac, true_value_medium_ac)
 
@@ -168,9 +168,9 @@ deviation_high_ac <- bind_rows(sampling_high_ac) %>%
                 rmse = sqrt(mse), 
                 nrmse = rmse / estimate)
 
-UtilityFunctions::save_rds(object = deviation_high_ac, 
-                           filename = "deviation_high_ac_50.rds", 
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
+helpeR::save_rds(object = deviation_high_ac, 
+                 filename = "deviation_high_ac_50.rds", 
+                 path = paste0(getwd(), "/3_Output"),
+                 overwrite = overwrite)
 
 # rm(sampling_high_ac, true_value_high_ac)

@@ -1,10 +1,10 @@
 #### 1. Load libraries and source functions #### 
 library(dplyr)
 library(ggplot2)
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR")
 library(landscapemetrics)
-library(patchwork)
+library(patchwork) # devtools::install_github("thomasp85/patchwork")
 library(purrr)
-library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions")
 library(readr)
 library(tidyr)
 
@@ -95,7 +95,7 @@ results$type_lsm <- case_when(
   TRUE ~ as.character(results$type_lsm)
 )
 
-# plot result
+# plot nRMSE for each metric (not used in manuscript)
 ggplot_metrics <- ggplot(data = results, 
                          aes(x = metric, y = unique_label)) +
   geom_tile(aes(fill = nrmse_median)) + 
@@ -111,11 +111,9 @@ ggplot_metrics <- ggplot(data = results,
         legend.position = "bottom", 
         legend.key.width = unit(3, "cm"))
 
-# ggsave("4_Plots/ggplot_metrics.png", width = 15, height = 18)
-# ggsave("4_Plots/ggplot_metrics.eps", width = 15, height = 18)
-
 #### 4. Clean data ####
-# Summarise nrmse for each metric
+
+# Summarise nrmse for each metric 
 deviation_summarised <- dplyr::group_by(deviation_joined, 
                                         autocorrelation, percentage, shape, type_scheme, level, class, metric) %>%
   dplyr::summarise(mse_median = median(mse, na.rm = TRUE) * 100, 
@@ -136,6 +134,7 @@ deviation_cleaned <- dplyr::filter(deviation_joined, !(metric %in% metric_list))
 deviation_cleaned <- dplyr::filter(deviation_cleaned, is.finite(nrmse))
 
 #### 5. Summarised by type ####
+
 # summarise by landscape metric group according to FRAGSTATS
 deviation_summarised <- dplyr::group_by(deviation_cleaned, 
                                         autocorrelation, percentage, shape, type_scheme, level, class, type_lsm) %>%
@@ -164,7 +163,7 @@ results$type_lsm <- case_when(
   TRUE ~ as.character(results$type_lsm)
 )
 
-# plot results
+# plot nRMSE for each metric type (not used in manuscript)
 ggplot_type <- ggplot(data = results, 
                       aes(x = type_lsm, y = unique_label)) +
   geom_tile(aes(fill = nrmse_median)) + 
@@ -179,10 +178,8 @@ ggplot_type <- ggplot(data = results,
         legend.position = "bottom", 
         legend.key.width = unit(3, "cm")) 
 
-# ggsave("4_Plots/ggplot_type.png", width = 15, height = 18)
-# ggsave("4_Plots/ggplot_type.eps", width = 15, height = 18)
-
 ### General analyses ####
+
 # Metrics with a nRMSE > 125% for all sampling schemes
 metric_list
 
@@ -299,11 +296,21 @@ ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
   theme(text = element_text(size = 25))
 
 # Create one large plot
-ggplot_hypothesis_1 +
+ggplot_hypotheses <- ggplot_hypothesis_1 +
   ggplot_hypothesis_2 +
   ggplot_hypothesis_3 +
   plot_layout(ncol = 1) +
   patchwork::plot_annotation(tag_levels = "A", tag_suffix = ")")
 
-# ggsave("4_Plots/ggplot_hypotheses.png", width = 15, height = 18)
-# ggsave("4_Plots/ggplot_hypotheses.eps", width = 15, height = 18)
+# save result
+helpeR::save_ggplot(plot = ggplot_hypotheses, 
+                    path = "4_Plots", 
+                    filename = "ggplot_hypotheses.png", 
+                    width = 15, height = 18, 
+                    overwrite = FALSE)
+
+helpeR::save_ggplot(plot = ggplot_hypotheses, 
+                    path = "4_Plots", 
+                    filename = "ggplot_hypotheses.eps", 
+                    width = 15, height = 18, 
+                    overwrite = FALSE)

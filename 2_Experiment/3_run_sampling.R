@@ -1,5 +1,6 @@
 #### 1. Load libraries and source functions #### 
 library(clustermq)
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR")
 library(landscapemetrics)
 library(maptools)
 library(purrr)
@@ -17,6 +18,8 @@ overwrite <- FALSE # dont overwrite if file already exists
 landscapes_low_ac <- readr::read_rds(paste0(getwd(), 
                                      "/3_Output/landscapes_low_ac_50.rds"))
 
+# Sampling is done using a high performance cluster 
+
 sampling_low_ac <- clustermq::Q_rows(fun = sample_plots,
                                      df = simulation_design,
                                      const = list(landscape = landscapes_low_ac, 
@@ -30,16 +33,18 @@ sampling_low_ac <- clustermq::Q_rows(fun = sample_plots,
                                                      walltime = "48:00", 
                                                      processes = 1))
 
-UtilityFunctions::save_rds(object = sampling_low_ac,
-                           filename = "sampling_low_ac_50.rds",
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
+helpeR::save_rds(object = sampling_low_ac,
+                 filename = "sampling_low_ac_50.rds",
+                 path = paste0(getwd(), "/3_Output"),
+                 overwrite = overwrite)
 
 # rm(landscapes_low_ac)
 
 #### 3. Medium AC ####
 landscapes_medium_ac <- readr::read_rds(paste0(getwd(), 
                                         "/3_Output/landscapes_medium_ac_50.rds"))
+
+# Sampling is done using a high performance cluster
 
 sampling_medium_ac <- clustermq::Q_rows(fun = sample_plots,
                                         df = simulation_design,
@@ -54,16 +59,18 @@ sampling_medium_ac <- clustermq::Q_rows(fun = sample_plots,
                                                         walltime = "48:00", 
                                                         processes = 1))
 
-UtilityFunctions::save_rds(object = sampling_medium_ac,
-                           filename = "sampling_medium_ac_50.rds",
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
+helpeR::save_rds(object = sampling_medium_ac,
+                 filename = "sampling_medium_ac_50.rds",
+                 path = paste0(getwd(), "/3_Output"),
+                 overwrite = overwrite)
 
 # rm(landscapes_medium_ac)
 
 #### 4. High AC ####
 landscapes_high_ac <- readr::read_rds(paste0(getwd(), 
                                       "/3_Output/landscapes_high_ac_50.rds"))
+
+# Sampling is done using a high performance cluster
 
 sampling_high_ac <- clustermq::Q_rows(fun = sample_plots,
                                       df = simulation_design,
@@ -78,10 +85,10 @@ sampling_high_ac <- clustermq::Q_rows(fun = sample_plots,
                                                       walltime = "48:00", 
                                                       processes = 1))
 
-UtilityFunctions::save_rds(object = sampling_high_ac,
-                           filename = "sampling_high_ac_50.rds",
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
+helpeR::save_rds(object = sampling_high_ac,
+                 filename = "sampling_high_ac_50.rds",
+                 path = paste0(getwd(), "/3_Output"),
+                 overwrite = overwrite)
 
 # rm(landscapes_high_ac)
 

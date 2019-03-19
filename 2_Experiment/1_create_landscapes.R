@@ -1,14 +1,16 @@
 #### 1. Load libraries and source functions #### 
 library(clustermq)
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR")
 library(landscapetools)
 library(NLMR)
 library(purrr)
-library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions")
 
 purrr::walk(list.files(path = "1_Setup_Functions", pattern = ".R", full.names = TRUE), 
             function(x) source(x))
 
 #### 2. Create landscapes ####  
+
+# Landscapes are created using a high performance cluster 
 
 # Low AC
 landscapes_low_ac <- clustermq::Q(fun = simulate_landscapes, 
@@ -42,19 +44,19 @@ landscapes_high_ac <- clustermq::Q(fun = simulate_landscapes,
 overwrite <- FALSE # dont overwrite if file already exists
 
 # Low AC
-UtilityFunctions::save_rds(object = landscapes_low_ac, 
-                           filename = "landscapes_low_ac.rds", 
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
+helpeR::save_rds(object = landscapes_low_ac, 
+                 filename = "landscapes_low_ac.rds", 
+                 path = paste0(getwd(), "/3_Output"),
+                 overwrite = overwrite)
 
 # Medium AC
-UtilityFunctions::save_rds(object = landscapes_medium_ac, 
-                           filename = "landscapes_medium_ac.rds", 
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
+helpeR::save_rds(object = landscapes_medium_ac, 
+                 filename = "landscapes_medium_ac.rds", 
+                 path = paste0(getwd(), "/3_Output"),
+                 overwrite = overwrite)
 
 # High AC
-UtilityFunctions::save_rds(object = landscapes_high_ac, 
-                           filename = "landscapes_high_ac.rds", 
-                           path = paste0(getwd(), "/3_Output"),
-                           overwrite = overwrite)
+helpeR::save_rds(object = landscapes_high_ac, 
+                 filename = "landscapes_high_ac.rds", 
+                 path = paste0(getwd(), "/3_Output"),
+                 overwrite = overwrite)

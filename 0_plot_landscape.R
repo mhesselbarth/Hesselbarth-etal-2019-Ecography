@@ -108,7 +108,7 @@ ggplot_overall <- cowplot::plot_grid(ggplot_landscape, ggplot_patches, ggplot_co
 # save results
 # size of final plot
 width <- 16.6
-height <- 8.5
+height <- width * 0.4
 dpi <- 300
 overwrite <- TRUE
 

@@ -306,7 +306,7 @@ ggplot_hypotheses <- ggplot_hypothesis_1 +
 
 # save result
 width <- 16.6
-height <- width * 1.5
+height <- width * 1
 dpi <- 300
 overwrite <- TRUE
 

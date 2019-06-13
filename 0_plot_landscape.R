@@ -51,6 +51,12 @@ ggplot_overall <- gridExtra::grid.arrange(ggplot_landscape,
                                           widths = c(width, width, width), 
                                           heights = height)
 
+ggplot_overall <- cowplot::plot_grid(ggplot_landscape, 
+                                     ggplot_patches, 
+                                     ggplot_cores,
+                                     nrow = 1, ncol = 3, 
+                                     labels = c("a)", "b)", "c)"))
+
 # save results
 helpeR::save_ggplot(plot = ggplot_overall, 
                     path = "4_Plots", 

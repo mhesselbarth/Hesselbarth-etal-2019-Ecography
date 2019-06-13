@@ -201,6 +201,8 @@ dplyr::filter(deviation_cleaned, nrmse < 0.25) %>%
 
 #### 5. Hypotheses ####
 
+size <- 10.5
+
 # Hypothesis 1
 # summarise nRMSE by landscape sampled
 dplyr::group_by(deviation_cleaned, percentage) %>%
@@ -230,7 +232,7 @@ ggplot_hypothesis_1 <- ggplot(data = hypothesis_1_summarised) +
              ncol = 3, nrow = 1)  +
   labs(x = "Sampled landscape [%]", y = "nRMSE [%]") + 
   theme_bw() +
-  theme(text = element_text(size = 25))
+  theme(text = element_text(size = size))
 
 
 # Hypothesis 2
@@ -261,7 +263,7 @@ ggplot_hypothesis_2 <- ggplot(data = hypothesis_2_summarised) +
              ncol = 3, nrow = 1) +
   labs(x = "Plot shape", y = "nRMSE [%]") + 
   theme_bw() +
-  theme(text = element_text(size = 25))
+  theme(text = element_text(size = size))
 
 
 # Hypothesis 3
@@ -293,30 +295,35 @@ ggplot_hypothesis_3 <- ggplot(data = hypothesis_3_summarised) +
              ncol = 3, nrow = 1) +
   labs(x = "Spatial arrangement plots", y = "nRMSE [%]") + 
   theme_bw() +
-  theme(text = element_text(size = 25))
+  theme(text = element_text(size = size))
 
 # Create one large plot
 ggplot_hypotheses <- ggplot_hypothesis_1 +
   ggplot_hypothesis_2 +
   ggplot_hypothesis_3 +
   plot_layout(ncol = 1) +
-  patchwork::plot_annotation(tag_levels = "A", tag_suffix = ")")
+  patchwork::plot_annotation(tag_levels = "a", tag_suffix = ")")
 
 # save result
+width <- 16.6
+height <- width * 1.5
+dpi <- 300
+overwrite <- TRUE
+
 helpeR::save_ggplot(plot = ggplot_hypotheses, 
                     path = "4_Plots", 
                     filename = "ggplot_hypotheses.pdf", 
-                    width = 15, height = 18, dpi = 300,
-                    overwrite = FALSE)
+                    width = width, dpi = dpi, height = height, units = "cm",
+                    overwrite = overwrite)
 
 helpeR::save_ggplot(plot = ggplot_hypotheses, 
                     path = "4_Plots", 
                     filename = "ggplot_hypotheses.jpeg", 
-                    width = 15, height = 18, dpi = 300,
-                    overwrite = FALSE)
+                    width = width, height = height, dpi = dpi, units = "cm",
+                    overwrite = overwrite)
 
 helpeR::save_ggplot(plot = ggplot_hypotheses, 
                     path = "4_Plots", 
                     filename = "ggplot_hypotheses.eps", 
-                    width = 15, height = 18, dpi = 300, 
-                    overwrite = FALSE)
+                    width = width, height = height, dpi = dpi, units = "cm",
+                    overwrite = overwrite)

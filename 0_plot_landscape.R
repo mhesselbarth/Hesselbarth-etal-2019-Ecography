@@ -78,7 +78,7 @@ ggplot_cores <- landscapemetrics::get_patches(landscape, class = 1) %>%
   magrittr::extract2(1) %>% 
   landscapemetrics::get_boundaries() %>%  
   raster::as.data.frame(xy = TRUE) %>% 
-  dplyr::mutate(what = "b) Core areas") %>% 
+  dplyr::mutate(what = "c) Core areas") %>% 
   ggplot2::ggplot(ggplot2::aes(x, y)) +
   ggplot2::coord_fixed() +
   ggplot2::geom_raster(ggplot2::aes(fill = as.factor(layer))) +
@@ -110,7 +110,7 @@ ggplot_overall <- cowplot::plot_grid(ggplot_landscape, ggplot_patches, ggplot_co
 width <- 16.6
 height <- width * 0.4
 dpi <- 300
-overwrite <- TRUE
+overwrite <- FALSE
 
 helpeR::save_ggplot(plot = ggplot_overall, 
                     path = "4_Plots", 

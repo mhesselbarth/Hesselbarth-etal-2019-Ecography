@@ -14,7 +14,7 @@ The repository contains the following files:
 - `/3_Output`
   - Folder containing output of use case
 
-**Correspondace**
+**Correspondance:**
 
 maximilian.hesselbarth@uni-goettingen.de
   

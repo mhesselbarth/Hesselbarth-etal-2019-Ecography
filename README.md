@@ -13,6 +13,8 @@ The repository contains the following files:
   - R scripts to replicate results and figures of use case 
 - `/3_Output`
   - Folder containing output of use case
+ - `/4_Plots`
+  - Folder containing figures/plots
 
 **Correspondance:**
 

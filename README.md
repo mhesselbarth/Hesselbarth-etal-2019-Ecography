@@ -14,7 +14,7 @@ The repository contains the following files:
 - `/3_Output`
   - Folder containing output of use case
  - `/4_Plots`
-  - Folder containing figures/plots
+  - Folder containing figures/plots of results
 
 **Correspondance:**
 

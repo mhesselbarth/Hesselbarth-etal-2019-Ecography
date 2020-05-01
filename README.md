@@ -13,10 +13,9 @@ The repository contains the following files:
   - R scripts to replicate results and figures of use case 
 - `/3_Output`
   - Folder containing output of use case
- - `/4_Plots`
+- `/4_Plots`
   - Folder containing figures/plots of results
 
 **Correspondance:**
 
-maximilian.hesselbarth@uni-goettingen.de
-  
+mhk.hesselbarth@gmail.com

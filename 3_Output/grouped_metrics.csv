@@ -1,0 +1,59 @@
+level,metric,type_lsm
+landscape,ai,aggregation metric
+landscape,cohesion,aggregation metric
+landscape,contag,aggregation metric
+landscape,division,aggregation metric
+landscape,enn_cv,aggregation metric
+landscape,enn_mn,aggregation metric
+landscape,enn_sd,aggregation metric
+landscape,iji,aggregation metric
+landscape,lsi,aggregation metric
+landscape,mesh,aggregation metric
+landscape,pd,aggregation metric
+landscape,pladj,aggregation metric
+landscape,split,aggregation metric
+landscape,area_cv,area and ege metric
+landscape,area_mn,area and ege metric
+landscape,area_sd,area and ege metric
+landscape,ed,area and ege metric
+landscape,gyrate_cv,area and ege metric
+landscape,gyrate_mn,area and ege metric
+landscape,gyrate_sd,area and ege metric
+landscape,lpi,area and ege metric
+landscape,cai_cv,core area metric
+landscape,cai_mn,core area metric
+landscape,cai_sd,core area metric
+landscape,core_cv,core area metric
+landscape,core_mn,core area metric
+landscape,core_sd,core area metric
+landscape,dcad,core area metric
+landscape,dcore_cv,core area metric
+landscape,dcore_mn,core area metric
+landscape,dcore_sd,core area metric
+landscape,msidi,diversity metric
+landscape,msiei,diversity metric
+landscape,prd,diversity metric
+landscape,rpr,diversity metric
+landscape,shdi,diversity metric
+landscape,shei,diversity metric
+landscape,sidi,diversity metric
+landscape,siei,diversity metric
+landscape,condent,new metric
+landscape,ent,new metric
+landscape,joinent,new metric
+landscape,mutinf,new metric
+landscape,circle_cv,shape metric
+landscape,circle_mn,shape metric
+landscape,circle_sd,shape metric
+landscape,contig_cv,shape metric
+landscape,contig_mn,shape metric
+landscape,contig_sd,shape metric
+landscape,frac_cv,shape metric
+landscape,frac_mn,shape metric
+landscape,frac_sd,shape metric
+landscape,para_cv,shape metric
+landscape,para_mn,shape metric
+landscape,para_sd,shape metric
+landscape,shape_cv,shape metric
+landscape,shape_mn,shape metric
+landscape,shape_sd,shape metric

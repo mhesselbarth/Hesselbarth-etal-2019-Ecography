@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 .DS_Store
-.rds
-.jped
-.pdf
-.eps
+*.rds
+*.jpeg
+*.pdf
+*.eps
